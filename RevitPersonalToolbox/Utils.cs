@@ -6,8 +6,7 @@ namespace RevitPersonalToolbox
 {
     public static class Utils
     {
-        internal static IEnumerable<Element> SelectAllObservableElements(
-            Document doc)
+        internal static IEnumerable<Element> SelectAllObservableElements(Document doc)
         {
             // Select anything that is observable in Revit
             return new FilteredElementCollector(doc)
@@ -27,6 +26,15 @@ namespace RevitPersonalToolbox
 
             return e.Category.CategoryType == CategoryType.Model && e.Category.CanAddSubcategory;
         }
+
+        public static IEnumerable<Element> SelectRevitLinks (Document doc)
+        {
+            return new FilteredElementCollector(doc, doc.ActiveView.Id)
+                .OfCategory(BuiltInCategory.OST_RvtLinks)
+                .OfClass(typeof(RevitLinkInstance))
+                .ToElements();
+        }
+
 
         public static IEnumerable<View> GetViewTemplates(Document doc)
         {
