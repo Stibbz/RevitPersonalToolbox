@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CreateFilterFromAssemblyCode.cs" />
+    <Compile Include="Commands\SelectByParameter.cs" />
     <Compile Include="Commands\TotalDetailLinesLength.cs" />
     <Compile Include="Commands\UnhideAllObservableElementsInView.cs" />
     <Compile Include="Commands\UnjoinFromEverything.cs" />

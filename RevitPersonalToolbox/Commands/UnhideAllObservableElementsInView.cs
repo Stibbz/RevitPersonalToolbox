@@ -13,7 +13,6 @@ namespace RevitPersonalToolbox.Commands
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             Document doc = commandData.Application.ActiveUIDocument.Document;
-            View active = doc.ActiveView;
             List<ElementId> hiddenPhysicalElements = Utils.SelectAllObservableElements(doc)
                 .Where(x => x.IsHidden(doc.ActiveView))
                 .Select(x => x.Id)

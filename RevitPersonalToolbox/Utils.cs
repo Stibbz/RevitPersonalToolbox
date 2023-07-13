@@ -15,14 +15,14 @@ namespace RevitPersonalToolbox
                 .Where(IsObservable);
         }
 
-        private static bool IsObservable(Element e)
+        public static bool IsObservable(Element e)
         {
             // Filter to exclude anything that is not observable in Revit
             if (e.Category == null) return false;
             if (e.ViewSpecific) return false;
 
             // exclude specific unwanted categories (i.e. Voids)
-            if ((BuiltInCategory) e.Category.Id.IntegerValue == BuiltInCategory.OST_HVAC_Zones) return false;
+            if ((BuiltInCategory)e.Category.Id.IntegerValue == BuiltInCategory.OST_HVAC_Zones) return false;
 
             return e.Category.CategoryType == CategoryType.Model && e.Category.CanAddSubcategory;
         }
