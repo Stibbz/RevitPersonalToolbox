@@ -70,17 +70,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CreateFilterFromAssemblyCode.cs" />
-    <Compile Include="Commands\SelectByParameter.cs" />
+    <Compile Include="SelectByParameter\SelectByParameter.cs" />
     <Compile Include="Commands\TotalDetailLinesLength.cs" />
     <Compile Include="Commands\UnhideAllObservableElementsInView.cs" />
     <Compile Include="Commands\UnjoinFromEverything.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="RevitGlobalVariables.cs" />
     <Compile Include="RibbonApplication.cs" />
+    <Compile Include="SelectByParameter\SelectByParameterUtils.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

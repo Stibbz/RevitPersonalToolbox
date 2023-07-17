@@ -30,6 +30,7 @@ namespace RevitPersonalToolbox.Commands
                     JoinGeometryUtils.UnjoinGeometry(document, selected, e);
                 }
 
+
                 t.Commit();
             }
             return Result.Succeeded;

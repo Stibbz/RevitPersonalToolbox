@@ -1,21 +1,34 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 
 namespace RevitPersonalToolbox
 {
-    public static class Utils
+    public class Utils
     {
-        internal static IEnumerable<Element> SelectAllObservableElements(Document doc)
+        private ExternalCommandData CommandData { get; set; }
+        private UIDocument UiDocument { get; set; }
+        private Document Document { get; set; }
+
+
+        public Utils (ExternalCommandData commandData)
+        {
+            CommandData = commandData;
+            UiDocument = commandData.Application.ActiveUIDocument;
+            Document = commandData.Application.ActiveUIDocument.Document;
+        }
+
+        public IEnumerable<Element> SelectAllObservableElements()
         {
             // Select anything that is observable in Revit
-            return new FilteredElementCollector(doc)
+            return new FilteredElementCollector(Document)
                 .WhereElementIsNotElementType()
                 .WhereElementIsViewIndependent()
                 .Where(IsObservable);
         }
 
-        public static bool IsObservable(Element e)
+        private static bool IsObservable(Element e)
         {
             // Filter to exclude anything that is not observable in Revit
             if (e.Category == null) return false;
@@ -27,46 +40,42 @@ namespace RevitPersonalToolbox
             return e.Category.CategoryType == CategoryType.Model && e.Category.CanAddSubcategory;
         }
 
-        public static IEnumerable<Element> SelectRevitLinks (Document doc)
+        public IEnumerable<Element> SelectRevitLinks ()
         {
-            return new FilteredElementCollector(doc, doc.ActiveView.Id)
+            return new FilteredElementCollector(Document, Document.ActiveView.Id)
                 .OfCategory(BuiltInCategory.OST_RvtLinks)
                 .OfClass(typeof(RevitLinkInstance))
                 .ToElements();
         }
 
-
-        public static IEnumerable<View> GetViewTemplates(Document doc)
+        public IEnumerable<Element> GetSelectedElements()
         {
-            IEnumerable<View> colViewTemplates = new List<View>(new FilteredElementCollector(doc)
+            IEnumerable<ElementId> selection = UiDocument.Selection.GetElementIds();
+            List<Element> selectedElements = selection.Select(id => Document.GetElement(id)).ToList();
+
+            return selectedElements;
+        }
+
+        public IEnumerable<View> GetViewTemplates()
+        {
+            return new FilteredElementCollector(Document)
                     .OfClass(typeof(View))
                     .Cast<View>()
-                    .Where(v => v.IsTemplate))
-                .Where(v => v.ViewType != ViewType.Schedule);
-
-            // // Sort colViewTemplates alphabetically by using their Name (Lambda).
-            // // Making use of StringComparison.Ordinal to avoid problems when the code runs on computers with different culture settings.
-            // // https://www.jetbrains.com/help/rider/StringCompareToIsCultureSpecific.html
-            // colViewTemplates.Sort((v1, v2) => string.Compare(v1.Name, v2.Name, StringComparison.Ordinal));
-
-            return colViewTemplates;
+                    .Where(v => v.IsTemplate)
+                    .Where(v => v.ViewType != ViewType.Schedule);
         }
 
-        public static FilteredElementCollector GetFilterElements(Document doc)
+        public FilteredElementCollector GetFilterElements()
         {
-            FilteredElementCollector colFilters = new FilteredElementCollector(doc)
+            return new FilteredElementCollector(Document)
                 .OfClass(typeof(FilterElement));
-
-            return colFilters;
         }
 
-        public static FilteredElementCollector GetRevitLinks(Document doc)
+        public FilteredElementCollector GetRevitLinks()
         {
-            FilteredElementCollector colRevitLinks = new FilteredElementCollector(doc)
+            return new FilteredElementCollector(Document)
                 .OfCategory(BuiltInCategory.OST_RvtLinks)
                 .OfClass(typeof(RevitLinkType));
-
-            return colRevitLinks;
         }
     }
 }
