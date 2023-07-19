@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using RevitPersonalToolbox.Windows;
 
 namespace RevitPersonalToolbox.SelectByParameter
 {
@@ -10,29 +13,51 @@ namespace RevitPersonalToolbox.SelectByParameter
     [Regeneration(RegenerationOption.Manual)]
     internal class SelectByParameter : IExternalCommand
     {
+        /* Summary
+            1. Get selected elements and their parameters + Values
+            2. Show to user (in WPF form):
+                - All distinct parameters that have been found in the Selected Elements
+                - All values for each parameter (if different values display "<varies>")
+            3. Have user select the desired parameter + value to search for
+            4. Select every element that has the same parameter + value
+        */
+
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIDocument uiDocument = commandData.Application.ActiveUIDocument;
-            Document document = commandData.Application.ActiveUIDocument.Document;
             Utils utils = new Utils(commandData);
 
-            // Get current User Selection
+            // Get all selected elements
             IEnumerable<Element> selectedElements = utils.GetSelectedElements();
+
+
+            IEnumerable<RevitElement> revitElements = selectedElements.Select(element => new RevitElement(element)).ToList();
             
-            // Get all distinct parameters in sorted (by name) order
-            IEnumerable<Parameter> distinctParameters = SelectByParameterUtils.GetDistinctParameters(selectedElements);
 
 
-            /* TODO: Future implementations
-             1. Create WPF form to display:
-                - All parameters that have been found
-                - All values for each parameter (if different values display "<varies>")
-             2. Have user select the desired parameter and value to search by
-             3. Select every element that has the desired parameter and value
-            */
+            //// Get all distinct parameters that have been found in the selected elements
+            //IEnumerable<Parameter> distinctParameters = SelectByParameterUtils.GetDistinctParameters(selectedElements);
+
+            //// Get all values for each parameter (if different values display "<varies>")
 
 
-            
+
+            // 2. Show to user (in WPF form):
+            SelectionWindow selectionWindow = new SelectionWindow();
+            selectionWindow.TitleLabel.Name = "Select By Parameter";
+
+            List<string> paramNames = revitElements.Select(revitElement => revitElement.ParamName).ToList();
+            selectionWindow.ListBoxParameterNames.ItemsSource = paramNames;
+
+            List<string> paramValues = revitElements.Select(revitElement => revitElement.ParamValue).ToList();
+            selectionWindow.ListBoxParameterValues.ItemsSource = paramValues;
+
+            selectionWindow.ShowDialog();
+
+
+
+
+
 
             List<Element> filteredByParameter = new List<Element>();
             ICollection<ElementId> filteredElementIds = filteredByParameter.Select(element => element.Id).ToList();
@@ -41,4 +66,5 @@ namespace RevitPersonalToolbox.SelectByParameter
             return Result.Succeeded;
         }
     }
+
 }
