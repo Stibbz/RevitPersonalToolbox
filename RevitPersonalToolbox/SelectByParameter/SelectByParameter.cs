@@ -30,8 +30,10 @@ namespace RevitPersonalToolbox.SelectByParameter
             // Get all selected elements
             IEnumerable<Element> selectedElements = utils.GetSelectedElements();
 
-
-            IEnumerable<RevitElement> revitElements = selectedElements.Select(element => new RevitElement(element)).ToList();
+            // TODO: Idea
+            /* Create methods that gets all Parameters out of each Element,
+                then call DataModelParameters so the DataModel results in a list of all Parameters. 
+                -> Duplicate Parameters is fine here, since each Parameter has to have it's own value. NO FILTERING NEEDED YET */
             
 
 
@@ -46,10 +48,10 @@ namespace RevitPersonalToolbox.SelectByParameter
             SelectionWindow selectionWindow = new SelectionWindow();
             selectionWindow.TitleLabel.Name = "Select By Parameter";
 
-            List<string> paramNames = revitElements.Select(revitElement => revitElement.ParamName).ToList();
+            //List<string> paramNames = revitElements.Select(revitElement => revitElement.Name).ToList();
             selectionWindow.ListBoxParameterNames.ItemsSource = paramNames;
 
-            List<string> paramValues = revitElements.Select(revitElement => revitElement.ParamValue).ToList();
+            //List<string> paramValues = revitElements.Select(revitElement => revitElement.Value).ToList();
             selectionWindow.ListBoxParameterValues.ItemsSource = paramValues;
 
             selectionWindow.ShowDialog();
