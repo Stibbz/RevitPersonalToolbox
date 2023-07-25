@@ -14,8 +14,8 @@ namespace RevitPersonalToolbox.Commands
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            var uiDoc = commandData.Application.ActiveUIDocument;
-            var doc = uiDoc.Document;
+            UIDocument uiDoc = commandData.Application.ActiveUIDocument;
+            Document doc = uiDoc.Document;
             
             
             return Result.Succeeded;

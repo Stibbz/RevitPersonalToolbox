@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using Autodesk.Revit.DB;
+﻿using Autodesk.Revit.DB;
 
 namespace RevitPersonalToolbox.SelectByParameter
 {
     internal class DataModelParameter
     {
-        //public Element Element { get; set; }
         public Parameter Parameter { get; set; }
         public string Name { get; set; }
         public string Value { get; set; }

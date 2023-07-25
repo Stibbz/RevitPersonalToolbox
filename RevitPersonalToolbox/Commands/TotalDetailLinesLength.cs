@@ -13,22 +13,22 @@ namespace RevitPersonalToolbox.Commands
             Document doc = commandData.Application.ActiveUIDocument.Document;
 
             // Collect all lines in current view
-            var currentView = doc.ActiveView;
+            View currentView = doc.ActiveView;
             FilteredElementCollector allDetailLines =
                 new FilteredElementCollector(doc, currentView.Id).OfCategory(BuiltInCategory.OST_Lines);
 
             double totalLength = 0;
-            foreach (var line in allDetailLines)
+            foreach (Element line in allDetailLines)
             {
                 // TODO: Dynamically ask user what LineType(s) should be measured.
                 // Check if lines are red
-                var lineStyleParam = line.LookupParameter("Line Style");
+                Parameter lineStyleParam = line.LookupParameter("Line Style");
                 if (lineStyleParam == null) continue;
                 string lineStyle = lineStyleParam.AsValueString();
                 if (!lineStyle.Contains("Red")) continue;
 
                 // Add length of each red line
-                var lengthParam = line.LookupParameter("Length");
+                Parameter lengthParam = line.LookupParameter("Length");
                 if (lengthParam == null) continue;
                 double length = double.Parse(lengthParam.AsValueString()) / 1000;
 

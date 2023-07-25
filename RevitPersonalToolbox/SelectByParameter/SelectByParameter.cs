@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -14,12 +13,12 @@ namespace RevitPersonalToolbox.SelectByParameter
     internal class SelectByParameter : IExternalCommand
     {
         /* Summary
-            1. Get selected elements and their parameters + Values
-            2. Show to user (in WPF form):
-                - All distinct parameters that have been found in the Selected Elements
-                - All values for each parameter (if different values display "<varies>")
-            3. Have user select the desired parameter + value to search for
-            4. Select every element that has the same parameter + value
+            1. Get selected elements and parameter data 
+            2. Display form showing distinct Parameters and their values (<varies> if varying values).
+            3. User selects the desired parameter value to search for.
+            4. Get every element in the project and match with user input
+            5. Select every corresponding element
+            6. (optional) Pop-up suggesting to isolate selection OR temporarily colorize for visibility
         */
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
@@ -28,42 +27,32 @@ namespace RevitPersonalToolbox.SelectByParameter
             Utils utils = new Utils(commandData);
 
             // Get all selected elements
-            IEnumerable<Element> selectedElements = utils.GetSelectedElements();
+            List<Element> selectedElements = utils.GetSelectedElements().ToList();
+            if (!selectedElements.Any())
+            {
+                TaskDialog.Show("Error", "Select items first.");
+                return Result.Failed;
+            }
 
-            // TODO: Idea
-            /* Create methods that gets all Parameters out of each Element,
-                then call DataModelParameters so the DataModel results in a list of all Parameters. 
-                -> Duplicate Parameters is fine here, since each Parameter has to have it's own value. NO FILTERING NEEDED YET */
+            // Create WPF Form with DataGrid
+            DataGridWindow dataGridWindow = new DataGridWindow { TitleLabel = { Content = "Select by Parameter" } };
+
+            // Get all Parameters and their Values from every selected Element
+            IOrderedEnumerable<DataModelParameter> dataModelParameters = SelectByParameterUtils.GetParametersAndValues(selectedElements);
             
+            // Get only distinct Parameters and their values (<varies> if varying values).
+            Dictionary<string, List<string>> distinctNamesAndValues = SelectByParameterUtils.GetDistinctNamesAndValues(dataModelParameters);
+            
+            // Initialize Datatable and populate with distinct Parameters and values
+            DataTable dataTable = SelectByParameterUtils.CreateDataTable();
+            SelectByParameterUtils.PopulateDataTable(distinctNamesAndValues, dataTable);
 
-
-            //// Get all distinct parameters that have been found in the selected elements
-            //IEnumerable<Parameter> distinctParameters = SelectByParameterUtils.GetDistinctParameters(selectedElements);
-
-            //// Get all values for each parameter (if different values display "<varies>")
-
-
-
-            // 2. Show to user (in WPF form):
-            SelectionWindow selectionWindow = new SelectionWindow();
-            selectionWindow.TitleLabel.Name = "Select By Parameter";
-
-            //List<string> paramNames = revitElements.Select(revitElement => revitElement.Name).ToList();
-            selectionWindow.ListBoxParameterNames.ItemsSource = paramNames;
-
-            //List<string> paramValues = revitElements.Select(revitElement => revitElement.Value).ToList();
-            selectionWindow.ListBoxParameterValues.ItemsSource = paramValues;
-
-            selectionWindow.ShowDialog();
-
-
-
-
-
-
-            List<Element> filteredByParameter = new List<Element>();
-            ICollection<ElementId> filteredElementIds = filteredByParameter.Select(element => element.Id).ToList();
-            uiDocument.Selection.SetElementIds(filteredElementIds);
+            // Bind DataTable to WPF Form by name.
+            // REVIEW: Understand better how the DataGrid is binding to the DataTable (in .XAML look for: "ItemsSource="{Binding }" )
+            dataGridWindow.DataContext = dataTable.DefaultView;
+            dataGridWindow.ShowDialog();
+            
+            
 
             return Result.Succeeded;
         }
