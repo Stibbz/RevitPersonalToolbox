@@ -32,10 +32,10 @@ namespace RevitPersonalToolbox.SelectByParameter
         /// </summary>
         /// <param name="dataModelParameters"></param>
         /// <returns></returns>
-        internal static Dictionary<string, List<string>> GetDistinctNamesAndValues(IOrderedEnumerable<DataModelParameter> dataModelParameters)
+        internal static Dictionary<string, List<string>> GetDistinctNamesAndValues(IOrderedEnumerable<ParameterModel> dataModelParameters)
         {
             Dictionary<string, List<string>> distinctNamesAndValues = new Dictionary<string, List<string>>();
-            foreach (DataModelParameter parameter in dataModelParameters)
+            foreach (ParameterModel parameter in dataModelParameters)
             {
                 if (distinctNamesAndValues.ContainsKey(parameter.Name))
                 {
@@ -59,16 +59,16 @@ namespace RevitPersonalToolbox.SelectByParameter
             return dataTable;
         }
 
-        internal static IOrderedEnumerable<DataModelParameter> GetParametersAndValues(IEnumerable<Element> selectedElements)
+        internal static IOrderedEnumerable<ParameterModel> GetParametersAndValues(IEnumerable<Element> selectedElements)
         {
-            List<DataModelParameter> dataModelParameters = new List<DataModelParameter>();
+            List<ParameterModel> dataModelParameters = new List<ParameterModel>();
             foreach (Element selectedElement in selectedElements)
             {
                 IEnumerable<Parameter> parameters = selectedElement.GetOrderedParameters();
-                dataModelParameters.AddRange(parameters.Select(parameter => new DataModelParameter(parameter)));
+                dataModelParameters.AddRange(parameters.Select(parameter => new ParameterModel()));
             }
 
-            IOrderedEnumerable<DataModelParameter> sortedDataModelParameters = dataModelParameters.OrderBy(x => x.Name);
+            IOrderedEnumerable<ParameterModel> sortedDataModelParameters = dataModelParameters.OrderBy(x => x.Name);
 
             return sortedDataModelParameters;
         }

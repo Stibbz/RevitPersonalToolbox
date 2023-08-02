@@ -53,8 +53,8 @@
                 VerticalAlignment="Bottom" HorizontalAlignment="Right"
                 Width="80" Height="23" 
                 IsDefault="True" 
-                Click="ApplyButton_Click"
                 Content="Apply"
+                Command="{Binding ButtonClickCommand}"
         />
         <Button x:Name="CancelButton"
                 Margin="8,8,8,8"

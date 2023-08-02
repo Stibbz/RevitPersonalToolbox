@@ -78,8 +78,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CreateFilterFromAssemblyCode.cs" />
-    <Compile Include="SelectByParameter\DataModelParameter.cs" />
-    <Compile Include="SelectByParameter\SelectByParameter.cs" />
+    <Compile Include="SelectByParameter\BusinessLogic.cs" />
+    <Compile Include="SelectByParameter\ParameterModel.cs" />
+    <Compile Include="SelectByParameter\Command.cs" />
+    <Compile Include="SelectByParameter\ViewModel.cs" />
     <Compile Include="Commands\TotalDetailLinesLength.cs" />
     <Compile Include="Commands\UnhideAllObservableElementsInView.cs" />
     <Compile Include="Commands\UnjoinFromEverything.cs" />

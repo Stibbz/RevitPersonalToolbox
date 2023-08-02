@@ -28,7 +28,7 @@ namespace RevitPersonalToolbox.Windows
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
+            this.DataContext = new SelectByParameter.ViewModel();
         }
 
         private void TopicComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
