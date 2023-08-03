@@ -82,7 +82,6 @@
     <Compile Include="SelectByParameter\ParameterModel.cs" />
     <Compile Include="SelectByParameter\Command.cs" />
     <Compile Include="SelectByParameter\RevitExecutor.cs" />
-    <Compile Include="SelectByParameter\RevitUtils.cs" />
     <Compile Include="SelectByParameter\ViewWindow.cs" />
     <Compile Include="SelectByParameter\ViewModel.cs" />
     <Compile Include="Commands\TotalDetailLinesLength.cs" />
@@ -91,11 +90,10 @@
     <Compile Include="Main.cs" />
     <Compile Include="RevitGlobalVariables.cs" />
     <Compile Include="RibbonApplication.cs" />
-    <Compile Include="SelectByParameter\SelectByParameterUtils.cs" />
     <Compile Include="Windows\SelectionWindow.xaml.cs">
       <DependentUpon>SelectionWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils.cs" />
+    <Compile Include="RevitUtils.cs" />
     <Compile Include="Windows\DataGridWindow.xaml.cs">
       <DependentUpon>DataGridWindow.xaml</DependentUpon>
     </Compile>

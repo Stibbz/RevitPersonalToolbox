@@ -10,7 +10,7 @@ namespace RevitPersonalToolbox.SelectByParameter
     {
         // Fields
         private readonly BusinessLogic _businessLogic;
-        private readonly Utils _utils;
+        private readonly RevitUtils _revitUtils;
         private IOrderedEnumerable<ParameterModel> _parameterModel;
         
         
@@ -26,10 +26,10 @@ namespace RevitPersonalToolbox.SelectByParameter
         }
         
         // Constructors
-        public ViewModel(BusinessLogic businessLogic, Utils utils)
+        public ViewModel(BusinessLogic businessLogic, RevitUtils revitUtils)
         {
             _businessLogic = businessLogic;
-            _utils = utils;
+            _revitUtils = revitUtils;
 
             LoadData();
         }
@@ -39,7 +39,7 @@ namespace RevitPersonalToolbox.SelectByParameter
         public void LoadData()
         {
             // Get all selected elements
-            List<Element> selectedElements = _utils.GetSelectedElements().ToList();
+            List<Element> selectedElements = _revitUtils.GetSelectedElements().ToList();
             
             // Get Data from Revit to populate the ParameterModels
             ParameterModel = _businessLogic.GetParameterModelData(selectedElements);
@@ -54,7 +54,7 @@ namespace RevitPersonalToolbox.SelectByParameter
         private void SchimmelPenninckIsZielig()
         {
             // // Get all selected elements
-            // List<Element> selectedElements = _utils.GetSelectedElements().ToList();
+            // List<Element> selectedElements = _revitUtils.GetSelectedElements().ToList();
             // if (!selectedElements.Any())
             // {
             //     TaskDialog.Show("Error", "Select items first.");

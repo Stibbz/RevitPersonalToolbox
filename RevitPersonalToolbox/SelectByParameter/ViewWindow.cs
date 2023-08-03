@@ -11,19 +11,19 @@ namespace RevitPersonalToolbox.SelectByParameter
 {
     internal class ViewWindow : IDisposable
     {
-        private readonly Utils _utils; 
+        private readonly RevitUtils _revitUtils; 
         private readonly ViewModel _viewModel;
 
-        public ViewWindow(Utils utils, ViewModel viewModel)
+        public ViewWindow(ViewModel viewModel, RevitUtils revitUtils)
         {
-            _utils = utils;
+            _revitUtils = revitUtils;
             _viewModel = viewModel;
         }
 
         public void ShowWindow()
         {
             // Get all selected elements
-            List<Element> selectedElements = _utils.GetSelectedElements().ToList();
+            List<Element> selectedElements = _revitUtils.GetSelectedElements().ToList();
             if (!selectedElements.Any())
             {
                 TaskDialog.Show("Error", "Select items first.");

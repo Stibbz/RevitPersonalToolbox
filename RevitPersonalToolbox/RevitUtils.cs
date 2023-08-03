@@ -8,14 +8,14 @@ using Autodesk.Revit.UI;
 
 namespace RevitPersonalToolbox
 {
-    public class Utils
+    public class RevitUtils
     {
         private ExternalCommandData CommandData { get; set; }
         private UIDocument UiDocument { get; set; }
         private Document Document { get; set; }
 
 
-        public Utils(ExternalCommandData commandData)
+        public RevitUtils(ExternalCommandData commandData)
         {
             CommandData = commandData;
             UiDocument = commandData.Application.ActiveUIDocument;

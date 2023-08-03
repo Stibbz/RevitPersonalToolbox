@@ -20,14 +20,12 @@ namespace RevitPersonalToolbox.SelectByParameter
         {
             // Where code comes in from Revit
             Document document = commandData.Application.ActiveUIDocument.Document;
-            RevitUtils revitUtils = new RevitUtils(document);
+            RevitUtils revitUtils = new RevitUtils(commandData);
             RevitExecutor revitExecutor = new RevitExecutor(document, revitUtils);
-
-            Utils utils = new Utils(commandData);
             
             BusinessLogic businessLogic = new BusinessLogic(document);
-            ViewModel viewModel = new ViewModel(businessLogic, utils);
-            ViewWindow viewWindow = new ViewWindow(utils, viewModel);
+            ViewModel viewModel = new ViewModel(businessLogic, revitUtils);
+            ViewWindow viewWindow = new ViewWindow(viewModel, revitUtils);
             
             viewWindow.ShowWindow();
             
