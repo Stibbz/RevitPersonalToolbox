@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Autodesk.Revit.DB;
@@ -41,8 +42,16 @@ namespace RevitPersonalToolbox.SelectByParameter
             // Get all selected elements
             List<Element> selectedElements = _revitUtils.GetSelectedElements().ToList();
             
+
+            // Refactor this stuff so we actually end up with distinct Parameters only...
+
             // Get Data from Revit to populate the ParameterModels
+            // This should probably not become the ParameterModel yet??
             ParameterModel = _businessLogic.GetParameterModelData(selectedElements);
+            
+            //DataTable dataTable = CreateDataTable();
+            //PopulateDataTable(distinctNamesAndValues, dataTable);
+
         }
 
         // Method to save the data to the Business Logic Layer
@@ -51,7 +60,7 @@ namespace RevitPersonalToolbox.SelectByParameter
             _businessLogic.SaveDataToModel(ParameterModel);
         }
         
-        private void SchimmelPenninckIsZielig()
+        private void UnstructuredWorkingVersion()
         {
             // // Get all selected elements
             // List<Element> selectedElements = _revitUtils.GetSelectedElements().ToList();
@@ -77,6 +86,35 @@ namespace RevitPersonalToolbox.SelectByParameter
             // REVIEW: Understand better how the DataGrid is binding to the DataTable (in .XAML look for: "ItemsSource="{Binding }" )
             // dataGridWindow.DataContext = dataTable;
             //dataGridWindow.ShowDialog();
+        }
+
+        /// <summary>
+        /// Populate DataTable using Dictionary
+        /// </summary>
+        /// <param name="distinctNamesAndValues"></param>
+        /// <param name="dataTable"></param>
+        private void PopulateDataTable(Dictionary<string, List<string>> distinctNamesAndValues, DataTable dataTable)
+        {
+            foreach (KeyValuePair<string, List<string>> keyValuePair in distinctNamesAndValues)
+            {
+                string name = keyValuePair.Key;
+                List<string> values = keyValuePair.Value;
+
+                // Determine if a key has single or multiple distinct values
+                List<string> distinctValues = values.Distinct().ToList();
+                string displayValue = (distinctValues.Count > 1) ? "<varies>" : values[0];
+
+                dataTable.Rows.Add(name, displayValue);
+            }
+        }
+
+        internal DataTable CreateDataTable()
+        {
+            // Initialize DataTable
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("Name", typeof(string));
+            dataTable.Columns.Add("Value", typeof(string));
+            return dataTable;
         }
         
         // Events
