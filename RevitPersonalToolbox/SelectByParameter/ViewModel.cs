@@ -1,49 +1,89 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
-using Autodesk.Revit.Attributes;
+using Autodesk.Revit.DB;
 
 namespace RevitPersonalToolbox.SelectByParameter
 {
     internal class ViewModel : INotifyPropertyChanged
     {
+        // Fields
         private readonly BusinessLogic _businessLogic;
-
-        public ViewModel()
+        private readonly Utils _utils;
+        private IOrderedEnumerable<ParameterModel> _parameterModel;
+        
+        
+        // Properties
+        public IOrderedEnumerable<ParameterModel> ParameterModel
         {
-            _businessLogic = new BusinessLogic();
-        }
-
-        // Property to hold the data from the Model
-        private ParameterModel data;
-        public ParameterModel Data
-        {
-            get { return data; }
+            get => _parameterModel;
             set
             {
-                data = value;
-                OnPropertyChanged(nameof(Data));
+                _parameterModel = value;
+                OnPropertyChanged(nameof(ParameterModel));
             }
         }
+        
+        // Constructors
+        public ViewModel(BusinessLogic businessLogic, Utils utils)
+        {
+            _businessLogic = businessLogic;
+            _utils = utils;
 
-        // Method to load the data from the Business Logic Layer
+            LoadData();
+        }
+
+
+        // Methods
         public void LoadData()
         {
-            Data = _businessLogic.GetDataFromRevit();
+            // Get all selected elements
+            List<Element> selectedElements = _utils.GetSelectedElements().ToList();
+            
+            // Get Data from Revit to populate the ParameterModels
+            ParameterModel = _businessLogic.GetParameterModelData(selectedElements);
         }
 
         // Method to save the data to the Business Logic Layer
         public void SaveData()
         {
-            _businessLogic.SaveDataToModel(Data);
+            _businessLogic.SaveDataToModel(ParameterModel);
         }
+        
+        private void SchimmelPenninckIsZielig()
+        {
+            // // Get all selected elements
+            // List<Element> selectedElements = _utils.GetSelectedElements().ToList();
+            // if (!selectedElements.Any())
+            // {
+            //     TaskDialog.Show("Error", "Select items first.");
+            // }
+            //
+            // Create WPF Form with DataGrid
+            // DataGridWindow dataGridWindow = new DataGridWindow { TitleLabel = { Content = "Select by Parameter" } };
+            
+            // // Get all Parameters and their Values from every selected Element
+            // IOrderedEnumerable<ParameterModel> dataModelParameters = _businessLogic.GetParameterModelData(selectedElements);
+            
+            // // Get only distinct Parameters and their values (<varies> if varying values).
+            // Dictionary<string, List<string>> distinctNamesAndValues = _businessLogic.GetDistinctNames(dataModelParameters);
 
+            // Initialize Datatable and populate with distinct Parameters and values
+            // DataTable dataTable = _businessLogic.CreateDataTable();
+            // _businessLogic.PopulateDataTable(distinctNamesAndValues, dataTable);
 
+            // Bind DataTable to WPF Form by name.
+            // REVIEW: Understand better how the DataGrid is binding to the DataTable (in .XAML look for: "ItemsSource="{Binding }" )
+            // dataGridWindow.DataContext = dataTable;
+            //dataGridWindow.ShowDialog();
+        }
+        
+        // Events
         public event PropertyChangedEventHandler PropertyChanged;
-
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-
 }

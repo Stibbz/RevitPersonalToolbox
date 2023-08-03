@@ -81,6 +81,9 @@
     <Compile Include="SelectByParameter\BusinessLogic.cs" />
     <Compile Include="SelectByParameter\ParameterModel.cs" />
     <Compile Include="SelectByParameter\Command.cs" />
+    <Compile Include="SelectByParameter\RevitExecutor.cs" />
+    <Compile Include="SelectByParameter\RevitUtils.cs" />
+    <Compile Include="SelectByParameter\ViewWindow.cs" />
     <Compile Include="SelectByParameter\ViewModel.cs" />
     <Compile Include="Commands\TotalDetailLinesLength.cs" />
     <Compile Include="Commands\UnhideAllObservableElementsInView.cs" />

@@ -22,7 +22,7 @@ namespace RevitPersonalToolbox.Commands
 
             using (Transaction tx = new Transaction(doc))
             {
-                tx.Start("Un-hide All Observable Elements in current View");
+                tx.Start("Un-hide All Observable Elements in current ViewWindow");
                 if (hiddenPhysicalElements.Count == 0)
                 {
                     TaskDialog.Show("info", "0 hidden elements found.");
