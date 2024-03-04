@@ -1,6 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RevitPersonalToolbox", "RevitPersonalToolbox\RevitPersonalToolbox.csproj", "{B294ADC8-9FB6-47A4-85BF-DEDC23848428}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33103.184
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RevitPersonalToolbox", "RevitPersonalToolbox\RevitPersonalToolbox.csproj", "{CE63B453-9F9A-471F-8511-BCB691D4E9C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B294ADC8-9FB6-47A4-85BF-DEDC23848428}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B294ADC8-9FB6-47A4-85BF-DEDC23848428}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B294ADC8-9FB6-47A4-85BF-DEDC23848428}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B294ADC8-9FB6-47A4-85BF-DEDC23848428}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE63B453-9F9A-471F-8511-BCB691D4E9C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE63B453-9F9A-471F-8511-BCB691D4E9C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE63B453-9F9A-471F-8511-BCB691D4E9C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE63B453-9F9A-471F-8511-BCB691D4E9C5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {198FFF6A-D90C-438B-85DD-A6EF961FC562}
 	EndGlobalSection
 EndGlobal
