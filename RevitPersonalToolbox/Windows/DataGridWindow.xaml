@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:RevitPersonalToolbox.SelectByParameter"
-             mc:Ignorable="d" 
+             xmlns:local="clr-namespace:RevitPersonalToolbox.SelectByParameter" d:DataContext="{d:DesignInstance Type=local:ViewModel}"
+        mc:Ignorable="d" 
              Loaded="Window_Loaded"
              Width="500" Height="800" SizeToContent="Width" 
              >
@@ -25,7 +25,7 @@
                FontSize="16" FontWeight="Bold" Foreground="Green"
                Content="Title"
         />
-        <DataGrid x:Name="DataGrid" ItemsSource="{Binding ParameterModel}"
+        <DataGrid x:Name="DataGrid" ItemsSource="{Binding DistinctParameterModel}"
             Margin="8,4,8,4"
             Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
             AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Cell">

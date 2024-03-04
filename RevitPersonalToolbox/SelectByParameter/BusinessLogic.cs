@@ -26,7 +26,7 @@ namespace RevitPersonalToolbox.SelectByParameter
         /// </summary>
         /// <param name="elements"></param>
         /// <returns></returns>
-        internal IOrderedEnumerable<ParameterModel> GetParameterModelData(IEnumerable<Element> elements)
+        internal IOrderedEnumerable<ParameterModel> GetParameterData(IEnumerable<Element> elements)
         {
             List<ParameterModel> dataModelParameters = new List<ParameterModel>();
             foreach (Element element in elements)
@@ -101,6 +101,17 @@ namespace RevitPersonalToolbox.SelectByParameter
         public void SaveDataToModel(IOrderedEnumerable<ParameterModel> parameterModel)
         {
 
+        }
+
+        public IOrderedEnumerable<ParameterModel> GetDistinctParameters(List<Element> selectedElements)
+        {
+            // TODO: Return a list of only distinct parameters. Multiple values should display <varies>
+            List<ParameterModel> distinctParameters = new List<ParameterModel>();
+
+
+
+            IOrderedEnumerable<ParameterModel> distinctSortedParameters = distinctParameters.OrderBy(x => x.Name);
+            return distinctSortedParameters;
         }
     }
 }

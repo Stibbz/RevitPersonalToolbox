@@ -22,14 +22,6 @@ namespace RevitPersonalToolbox.SelectByParameter
 
         public void ShowWindow()
         {
-            // Get all selected elements
-            List<Element> selectedElements = _revitUtils.GetSelectedElements().ToList();
-            if (!selectedElements.Any())
-            {
-                TaskDialog.Show("Error", "Select items first.");
-                return;
-            }
-
             // Create an instance of your WPF window (ViewWindow)
             DataGridWindow dataGridWindow = new DataGridWindow
             {

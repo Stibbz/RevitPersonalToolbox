@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CreateFilterFromAssemblyCode.cs" />
+    <Compile Include="Commands\FlipEachElementMidpoint.cs" />
     <Compile Include="SelectByParameter\BusinessLogic.cs" />
     <Compile Include="SelectByParameter\ParameterModel.cs" />
     <Compile Include="SelectByParameter\Command.cs" />

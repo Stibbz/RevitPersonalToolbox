@@ -13,6 +13,7 @@ namespace RevitPersonalToolbox.SelectByParameter
         private readonly BusinessLogic _businessLogic;
         private readonly RevitUtils _revitUtils;
         private IOrderedEnumerable<ParameterModel> _parameterModel;
+        private ParameterModel _distinctParameterModel;
         
         
         // Properties
@@ -23,6 +24,16 @@ namespace RevitPersonalToolbox.SelectByParameter
             {
                 _parameterModel = value;
                 OnPropertyChanged(nameof(ParameterModel));
+            }
+        }
+
+        public ParameterModel DistinctParameterModel
+        {
+            get => _distinctParameterModel;
+            set
+            {
+                _distinctParameterModel = value;
+                OnPropertyChanged(nameof(DistinctParameterModel));
             }
         }
         
@@ -40,15 +51,20 @@ namespace RevitPersonalToolbox.SelectByParameter
         public void LoadData()
         {
             // Get all selected elements
-            List<Element> selectedElements = _revitUtils.GetSelectedElements().ToList();
+            List<Element> selectedElements = _revitUtils.GetSelectedElements()?.ToList() ?? new List<Element>();
             
 
             // Refactor this stuff so we actually end up with distinct Parameters only...
 
             // Get Data from Revit to populate the ParameterModels
             // This should probably not become the ParameterModel yet??
-            ParameterModel = _businessLogic.GetParameterModelData(selectedElements);
-            
+            ParameterModel = _businessLogic.GetParameterData(selectedElements);
+
+            List<ParameterModel> test = ParameterModel.ToList();
+            test.RemoveRange(4, ParameterModel.Count() - 4);
+            //DistinctParameterModel = _businessLogic.GetDistinctParameters(selectedElements);
+            DistinctParameterModel = test[0];
+
             //DataTable dataTable = CreateDataTable();
             //PopulateDataTable(distinctNamesAndValues, dataTable);
 
@@ -73,7 +89,7 @@ namespace RevitPersonalToolbox.SelectByParameter
             // DataGridWindow dataGridWindow = new DataGridWindow { TitleLabel = { Content = "Select by Parameter" } };
             
             // // Get all Parameters and their Values from every selected Element
-            // IOrderedEnumerable<ParameterModel> dataModelParameters = _businessLogic.GetParameterModelData(selectedElements);
+            // IOrderedEnumerable<ParameterModel> dataModelParameters = _businessLogic.GetParameterData(selectedElements);
             
             // // Get only distinct Parameters and their values (<varies> if varying values).
             // Dictionary<string, List<string>> distinctNamesAndValues = _businessLogic.GetDistinctNames(dataModelParameters);

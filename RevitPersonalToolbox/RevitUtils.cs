@@ -83,7 +83,10 @@ namespace RevitPersonalToolbox
             IEnumerable<ElementId> selection = UiDocument.Selection.GetElementIds();
             List<Element> selectedElements = selection.Select(id => Document.GetElement(id)).ToList();
 
-            return selectedElements;
+            if (selectedElements.Any()) return selectedElements;
+
+            TaskDialog.Show("Error", "Select items first.");
+            return null;
         }
 
         public IEnumerable<View> GetViewTemplates()
