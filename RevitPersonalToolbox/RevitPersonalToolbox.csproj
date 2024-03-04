@@ -77,6 +77,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CheckViewTemplateAssigned.cs" />
     <Compile Include="Commands\CreateFilterFromAssemblyCode.cs" />
     <Compile Include="Commands\FlipEachElementMidpoint.cs" />
     <Compile Include="SelectByParameter\BusinessLogic.cs" />
@@ -91,6 +92,9 @@
     <Compile Include="Main.cs" />
     <Compile Include="RevitGlobalVariables.cs" />
     <Compile Include="RibbonApplication.cs" />
+    <Compile Include="Windows\SelectFromList.xaml.cs">
+      <DependentUpon>SelectFromList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\SelectionWindow.xaml.cs">
       <DependentUpon>SelectionWindow.xaml</DependentUpon>
     </Compile>
@@ -103,6 +107,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Windows\SelectFromList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\SelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
