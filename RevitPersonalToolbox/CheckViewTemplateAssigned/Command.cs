@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Autodesk.Revit.Attributes;
+﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using RevitPersonalToolbox.Windows;
+using RevitPersonalToolbox.SelectByParameter;
 
-namespace RevitPersonalToolbox.Commands
+namespace RevitPersonalToolbox.CheckViewTemplateAssigned
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
@@ -25,20 +23,17 @@ namespace RevitPersonalToolbox.Commands
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            UIDocument uiDoc = commandData.Application.ActiveUIDocument;
-            Document doc = uiDoc.Document;
+            // Where code comes in from Revit
 
+            Document document = commandData.Application.ActiveUIDocument.Document;
             RevitUtils revitUtils = new RevitUtils(commandData);
-            IEnumerable<View> viewTemplates = revitUtils.GetViewTemplates();
-
-            SelectFromList selectFromList = new SelectFromList();
-
-            selectFromList.MainTitle.Content = "Pick View Template";
-            selectFromList.Subtitle.Content = "You filthy animal.";
-            selectFromList.ListBoxSelection.DataContext = viewTemplates.Select(x => x.Name);
-
-            selectFromList.Show();
-
+            RevitExecutor revitExecutor = new RevitExecutor(document, revitUtils);
+            
+            BusinessLogic businessLogic = new BusinessLogic(document);
+            ViewModel viewModel = new ViewModel(businessLogic, revitUtils);
+            ViewWindow viewWindow = new ViewWindow(viewModel, revitUtils);
+            
+            viewWindow.ShowWindow();
             
             return Result.Succeeded;
         }

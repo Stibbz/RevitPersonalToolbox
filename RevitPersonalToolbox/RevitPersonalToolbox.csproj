@@ -77,7 +77,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CheckViewTemplateAssigned.cs" />
+    <Compile Include="CheckViewTemplateAssigned\Command.cs" />
+    <Compile Include="CheckViewTemplateAssigned\ViewModel.cs" />
+    <Compile Include="CheckViewTemplateAssigned\ViewWindow.cs" />
     <Compile Include="Commands\CreateFilterFromAssemblyCode.cs" />
     <Compile Include="Commands\FlipEachElementMidpoint.cs" />
     <Compile Include="SelectByParameter\BusinessLogic.cs" />

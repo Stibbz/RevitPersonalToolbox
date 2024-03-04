@@ -26,5 +26,10 @@ namespace RevitPersonalToolbox.Windows
         {
             Close();
         }
+
+        public void ShowWindow()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
