@@ -12,37 +12,47 @@
             <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
+
         <Label
-            Margin="4, 0, 4, 0"
-            x:Name="TitleLabel"
-            Content="Title"
-            Grid.Row="0"
+            Margin="4,0,4,0"
+            x:Name="MainTitle"
+            Content="Title placeholder"
+            Grid.Row="0" Grid.Column="0"
             VerticalContentAlignment="Center"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Green"
-            Grid.ColumnSpan="3" 
-            />
+        />
+        <Label
+            Margin="4,-8,4,0"
+            x:Name="SubTitle"
+            Content="Subtitle placeholder"
+            Grid.Row="1" Grid.Column="0"
+            VerticalContentAlignment="Center"
+            FontSize="12"
+            Foreground="Gray"
+        />
         <ListBox
             Margin="8,4,8,4"
             x:Name="ListBoxParameterNames"
-            Grid.Row="1"
+            Grid.Row="2"
             Grid.Column="0"
         />
         <ListBox
             Margin="8,4,8,4"
             x:Name="ListBoxParameterValues"
-            Grid.Row="1"
+            Grid.Row="2"
             Grid.Column="1"
         />
         <Button
             Margin="8,8,8,8"
             x:Name="HelpButton"
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="0" 
             VerticalAlignment="Bottom" 
             HorizontalAlignment="Left"
@@ -53,7 +63,7 @@
         <Button
             Margin="8,8,96,8"
             x:Name="ApplyButton"
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="1" 
             VerticalAlignment="Bottom" 
             HorizontalAlignment="Right"
@@ -65,7 +75,7 @@
         <Button
             Margin="8,8,8,8"
             x:Name="CancelButton"
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="1" 
             VerticalAlignment="Bottom" 
             HorizontalAlignment="Right"

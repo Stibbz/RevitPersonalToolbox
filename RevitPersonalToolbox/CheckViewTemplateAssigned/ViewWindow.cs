@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 using RevitPersonalToolbox.Windows;
 
 namespace RevitPersonalToolbox.CheckViewTemplateAssigned
@@ -22,26 +24,9 @@ namespace RevitPersonalToolbox.CheckViewTemplateAssigned
         public void ShowWindow()
         {
             IEnumerable<View> viewTemplates = _revitUtils.GetViewTemplates();
+            viewTemplates.Select(x => x.Name);
 
 
-            // Create an instance of your WPF window (ViewWindow)
-            SelectFromList selectFromList = new SelectFromList
-            {
-                MainTitle =
-                {
-                    Content = "Pick View Template"
-                },
-                Subtitle =
-                {
-                    Content = "Mkay."
-                },
-                ListBoxSelection =
-                {
-                    DataContext = viewTemplates.Select(x => x.Name)
-                }
-            };
-
-            selectFromList.Show();
         }
     }
 }

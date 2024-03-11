@@ -1,7 +1,11 @@
-﻿using Autodesk.Revit.Attributes;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using RevitPersonalToolbox.SelectByParameter;
+using RevitPersonalToolbox.Windows;
 
 namespace RevitPersonalToolbox.CheckViewTemplateAssigned
 {
@@ -33,9 +37,29 @@ namespace RevitPersonalToolbox.CheckViewTemplateAssigned
             ViewModel viewModel = new ViewModel(businessLogic, revitUtils);
             ViewWindow viewWindow = new ViewWindow(viewModel, revitUtils);
             
-            viewWindow.ShowWindow();
-            
+            // Create WPF Window
+            IEnumerable<View> viewTemplates = revitUtils.GetViewTemplates();
+            Dictionary<string, dynamic> initialInput = viewTemplates.ToDictionary<View, string, dynamic>(viewTemplate => viewTemplate.Name, viewTemplate => viewTemplate);
+
+            SelectSingleList selectionWindow = new SelectSingleList("Pick View Template",  "To check which Views have this View Template applied to them.", initialInput, Utils.RevitWindow(commandData));
+            selectionWindow.ShowDialog();
+
+            if (selectionWindow.Cancelled) return Result.Cancelled;
+
+            List<dynamic> selectedItems = selectionWindow.SelectedItems;
+            string selectedViewTemplate = selectedItems[0].Name;
+
+            // Results
+            // Check for null
+            Dictionary<string, dynamic> resultDictionary = selectedItems.ToDictionary<dynamic, string>(selectedItem => selectedItem.Name);
+            SelectSingleList resultWindow = new SelectSingleList("View Template is Active on these Views:", selectedViewTemplate, resultDictionary, Utils.RevitWindow(commandData));
+            resultWindow.ShowDialog();
+
+            if (selectionWindow.Cancelled) return Result.Cancelled;
+
             return Result.Succeeded;
         }
+
+
     }
 }

@@ -94,8 +94,8 @@
     <Compile Include="Main.cs" />
     <Compile Include="RevitGlobalVariables.cs" />
     <Compile Include="RibbonApplication.cs" />
-    <Compile Include="Windows\SelectFromList.xaml.cs">
-      <DependentUpon>SelectFromList.xaml</DependentUpon>
+    <Compile Include="Windows\SelectSingleList.xaml.cs">
+      <DependentUpon>SelectSingleList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\SelectionWindow.xaml.cs">
       <DependentUpon>SelectionWindow.xaml</DependentUpon>
@@ -104,12 +104,13 @@
     <Compile Include="Windows\DataGridWindow.xaml.cs">
       <DependentUpon>DataGridWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Windows\SelectFromList.xaml">
+    <Page Include="Windows\SelectSingleList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
