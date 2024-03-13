@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 
 namespace RevitPersonalToolbox.Windows
@@ -8,27 +7,27 @@ namespace RevitPersonalToolbox.Windows
     {
         public bool Cancelled { get; set; }
         public Dictionary<string, dynamic> Items { get; set; }
-        public List<dynamic> SelectedItems {get;set;}
+        public dynamic SelectedItem { get; set; }
 
         public SelectSingleList(string mainTitle, string subTitle, Dictionary<string, dynamic> items, Window owner)
         {
             InitializeComponent();
-            Items = Utils.SortDictionary(items);
+            
             MainTitle.Content = mainTitle;
             SubTitle.Content = subTitle;
-            Owner = Owner;
+            Items = Utils.SortDictionary(items);
             ListBoxSelection.DataContext = Items.Keys;
+            Owner = owner;
         }
 
         private void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
-            SelectedItems = new List<dynamic>();
             Cancelled = false;
-            IList selectedItems = ListBoxSelection.SelectedItems;
-            foreach (string item in selectedItems)
-            {
-                SelectedItems.Add(Items[item]);
-            }
+            string selectedItem = ListBoxSelection.SelectedItem.ToString();
+
+            // Get View object from the name
+            SelectedItem = Items[selectedItem];
+
             Close();
         }
 

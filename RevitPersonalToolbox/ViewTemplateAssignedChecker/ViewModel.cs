@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RevitPersonalToolbox.SelectByParameter;
 
-namespace RevitPersonalToolbox.CheckViewTemplateAssigned
+namespace RevitPersonalToolbox.ViewTemplateAssignedChecker
 {
     internal class ViewModel
     {

@@ -7,11 +7,11 @@ using Autodesk.Revit.UI;
 using RevitPersonalToolbox.SelectByParameter;
 using RevitPersonalToolbox.Windows;
 
-namespace RevitPersonalToolbox.CheckViewTemplateAssigned
+namespace RevitPersonalToolbox.ViewTemplateAssignedChecker
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class CheckViewTemplateAssigned : IExternalCommand
+    public class ViewTemplateAssignedChecker : IExternalCommand
     {
         /* Check for a specific View Template to which Views it has been assigned.
            Additionally, a way to show affected sheets + a button to filter which of these views have been placed on a sheet.
@@ -27,8 +27,6 @@ namespace RevitPersonalToolbox.CheckViewTemplateAssigned
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            // Where code comes in from Revit
-
             Document document = commandData.Application.ActiveUIDocument.Document;
             RevitUtils revitUtils = new RevitUtils(commandData);
             RevitExecutor revitExecutor = new RevitExecutor(document, revitUtils);
@@ -40,26 +38,33 @@ namespace RevitPersonalToolbox.CheckViewTemplateAssigned
             // Create WPF Window
             IEnumerable<View> viewTemplates = revitUtils.GetViewTemplates();
             Dictionary<string, dynamic> initialInput = viewTemplates.ToDictionary<View, string, dynamic>(viewTemplate => viewTemplate.Name, viewTemplate => viewTemplate);
-
-            SelectSingleList selectionWindow = new SelectSingleList("Pick View Template",  "To check which Views have this View Template applied to them.", initialInput, Utils.RevitWindow(commandData));
+            
+            SelectSingleList selectionWindow = new SelectSingleList("Pick a View Template",  "Check to which View(s) this Template has been assigned", initialInput, Utils.RevitWindow(commandData));
             selectionWindow.ShowDialog();
 
             if (selectionWindow.Cancelled) return Result.Cancelled;
 
-            List<dynamic> selectedItems = selectionWindow.SelectedItems;
-            string selectedViewTemplate = selectedItems[0].Name;
+            View selectedView = selectionWindow.SelectedItem;
+            if (selectedView == null) return Result.Cancelled;
 
             // Results
-            // Check for null
-            Dictionary<string, dynamic> resultDictionary = selectedItems.ToDictionary<dynamic, string>(selectedItem => selectedItem.Name);
-            SelectSingleList resultWindow = new SelectSingleList("View Template is Active on these Views:", selectedViewTemplate, resultDictionary, Utils.RevitWindow(commandData));
+            // Check for null when submitting?
+            Dictionary<string, dynamic> resultDictionary = new Dictionary<string, dynamic>();
+            IEnumerable<View> views = revitUtils.GetViews().ToList();
+            foreach (View view in views)
+            {
+                if (view.ViewTemplateId != selectedView.Id) continue;
+                if (!resultDictionary.ContainsKey(view.Name))
+                {
+                    resultDictionary.Add(view.Name, view);
+                }
+            }
+
+            SelectSingleList resultWindow = new SelectSingleList($"Template: \"{selectedView.Name}\"", "Has been assigned to the listed View(s)", resultDictionary, Utils.RevitWindow(commandData));
             resultWindow.ShowDialog();
 
-            if (selectionWindow.Cancelled) return Result.Cancelled;
-
-            return Result.Succeeded;
+            
+            return resultWindow.Cancelled ? Result.Cancelled : Result.Succeeded;
         }
-
-
     }
 }

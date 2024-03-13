@@ -110,5 +110,15 @@ namespace RevitPersonalToolbox
                 .OfCategory(BuiltInCategory.OST_RvtLinks)
                 .OfClass(typeof(RevitLinkType));
         }
+
+        public IEnumerable<View> GetViews()
+        {
+            return new FilteredElementCollector(Document)
+                .WhereElementIsNotElementType()
+                .OfClass(typeof(View))
+                .Cast<View>()
+                .Where(v=> !v.IsTemplate)
+                .Where(v=> v.CanUseTemporaryVisibilityModes());
+        }
     }
 }

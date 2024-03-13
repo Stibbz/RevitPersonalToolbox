@@ -8,7 +8,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using RevitPersonalToolbox.Windows;
 
-namespace RevitPersonalToolbox.CheckViewTemplateAssigned
+namespace RevitPersonalToolbox.ViewTemplateAssignedChecker
 {
     internal class ViewWindow
     {
