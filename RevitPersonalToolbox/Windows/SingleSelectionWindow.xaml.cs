@@ -4,11 +4,11 @@ using RevitPersonalToolbox.TemplateActivityChecker;
 
 namespace RevitPersonalToolbox.Windows
 {
-    public partial class GenericSelectionView : Window
+    public partial class SingleSelectionWindow : Window
     {
         public bool Cancelled { get; set; }
         
-        public GenericSelectionView(string mainTitle, string subTitle, Window owner)
+        public SingleSelectionWindow(string mainTitle, string subTitle, Window owner)
         {
             InitializeComponent();
             MainTitle.Content = mainTitle;

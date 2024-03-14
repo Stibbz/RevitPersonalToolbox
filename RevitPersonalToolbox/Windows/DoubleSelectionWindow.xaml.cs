@@ -17,15 +17,15 @@ using System.Windows.Shapes;
 namespace RevitPersonalToolbox.Windows
 {
     /// <summary>
-    /// Interaction logic for SelectionWindow.xaml
+    /// Interaction logic for DoubleSelectionWindow.xaml
     /// </summary>
-    public partial class SelectionWindow : Window
+    public partial class DoubleSelectionWindow : Window
     {
         public bool Cancelled { get; set; }
         public Dictionary<string, dynamic> Items { get; set; }
         public List<dynamic> SelectedItems {get;set;}
 
-        public SelectionWindow(string mainTitle, string subTitle, Dictionary<string, dynamic> items, Window owner)
+        public DoubleSelectionWindow(string mainTitle, string subTitle, Dictionary<string, dynamic> items, Window owner)
         {
             InitializeComponent();
             Items = Utils.SortDictionary(items);

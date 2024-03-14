@@ -90,34 +90,24 @@
     <Compile Include="Commands\TotalDetailLinesLength.cs" />
     <Compile Include="Commands\UnhideAllObservableElementsInView.cs" />
     <Compile Include="Commands\UnjoinFromEverything.cs" />
-    <Compile Include="Main.cs" />
-    <Compile Include="RevitGlobalVariables.cs" />
-    <Compile Include="RibbonApplication.cs" />
     <Compile Include="TemplateActivityChecker\ViewModel.cs" />
-    <Compile Include="Windows\SelectSingleList.xaml.cs">
-      <DependentUpon>SelectSingleList.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\SelectionWindow.xaml.cs">
-      <DependentUpon>SelectionWindow.xaml</DependentUpon>
+    <Compile Include="Windows\DoubleSelectionWindow.xaml.cs">
+      <DependentUpon>DoubleSelectionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="RevitUtils.cs" />
     <Compile Include="Windows\DataGridWindow.xaml.cs">
       <DependentUpon>DataGridWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
-    <Compile Include="Windows\GenericSelectionView.xaml.cs">
-      <DependentUpon>GenericSelectionView.xaml</DependentUpon>
+    <Compile Include="Windows\SingleSelectionWindow.xaml.cs">
+      <DependentUpon>SingleSelectionWindow.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Windows\SelectSingleList.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\SelectionWindow.xaml">
+    <Page Include="Windows\DoubleSelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -125,7 +115,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\GenericSelectionView.xaml">
+    <Page Include="Windows\SingleSelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

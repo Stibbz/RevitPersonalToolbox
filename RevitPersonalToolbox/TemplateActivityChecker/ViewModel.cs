@@ -11,6 +11,8 @@ namespace RevitPersonalToolbox.TemplateActivityChecker
         private bool _dialogResult;
 
         public View SelectedItem { get; set; }
+        // DialogResult is used to determine the result of the dialog.
+        // True when user pressed Apply, if null or false no selection was made.
         public bool DialogResult
         {
             get => _dialogResult;
@@ -35,7 +37,7 @@ namespace RevitPersonalToolbox.TemplateActivityChecker
             string mainTitle = $"Template: \"{SelectedItem.Name}\"";
             const string subTitle = "Has been assigned to the listed View(s)";
 
-            GenericSelectionView resultWindow = new GenericSelectionView(mainTitle, subTitle, Utils.RevitWindow(_commandData))
+            SingleSelectionWindow resultWindow = new SingleSelectionWindow(mainTitle, subTitle, Utils.RevitWindow(_commandData))
             {
                 DataContext = _revitUtils.CheckViewTemplateAssignment(SelectedItem),
                 ListBoxSelection =
