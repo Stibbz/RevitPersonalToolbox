@@ -12,19 +12,17 @@ namespace RevitPersonalToolbox.TemplateActivityChecker
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             RevitUtils revitUtils = new RevitUtils(commandData);
-
             ViewModel viewModel = new ViewModel(revitUtils, commandData);
-            viewModel.LoadData();
+
 
             const string mainTitle = "Pick a View Template";
             const string subTitle = "Check to which View(s) this Template has been assigned";
-
             GenericSelectionView mainWindow = new GenericSelectionView(mainTitle, subTitle,Utils.RevitWindow(commandData))
             {
                 DataContext = viewModel,
                 ListBoxSelection =
                 {
-                    ItemsSource = viewModel.RevitViewDataModel.ViewTemplates,
+                    ItemsSource = revitUtils.GetViewTemplates(),
                     DisplayMemberPath = "Name"
                 }
             };
