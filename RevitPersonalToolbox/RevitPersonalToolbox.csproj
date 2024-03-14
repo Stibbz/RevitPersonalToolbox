@@ -77,9 +77,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ViewTemplateAssignedChecker\Command.cs" />
-    <Compile Include="ViewTemplateAssignedChecker\ViewModel.cs" />
-    <Compile Include="ViewTemplateAssignedChecker\ViewWindow.cs" />
+    <Compile Include="Models\RevitViewDataModel.cs" />
+    <Compile Include="TemplateActivityChecker\Command.cs" />
+    <Compile Include="PropertyChangedNotifier.cs" />
+    <Compile Include="TemplateActivityChecker\ViewWindow.cs" />
     <Compile Include="Commands\CreateFilterFromAssemblyCode.cs" />
     <Compile Include="Commands\FlipEachElementMidpoint.cs" />
     <Compile Include="SelectByParameter\BusinessLogic.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="RevitGlobalVariables.cs" />
     <Compile Include="RibbonApplication.cs" />
+    <Compile Include="TemplateActivityChecker\ViewModel.cs" />
     <Compile Include="Windows\SelectSingleList.xaml.cs">
       <DependentUpon>SelectSingleList.xaml</DependentUpon>
     </Compile>
@@ -105,6 +107,9 @@
       <DependentUpon>DataGridWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
+    <Compile Include="Windows\GenericSelectionView.xaml.cs">
+      <DependentUpon>GenericSelectionView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -119,6 +124,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\DataGridWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\GenericSelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

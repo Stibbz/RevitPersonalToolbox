@@ -34,7 +34,7 @@ namespace RevitPersonalToolbox.SelectByParameter
                 // Get Parameters from Element
                 IEnumerable<Parameter> parameters = element.GetOrderedParameters();
                 
-                // Populate a Model for each Parameter
+                // Populate a RevitViewDataModel for each Parameter
                 dataModelParameters.AddRange(parameters.Select(parameter => new ParameterModel
                 {
                     Parameter = parameter, 
