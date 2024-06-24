@@ -9,16 +9,9 @@ using RevitPersonalToolbox.Windows;
 
 namespace RevitPersonalToolbox.SelectByParameter
 {
-    internal class ViewWindow : IDisposable
+    internal class ViewWindow(ViewModel viewModel, RevitUtils revitUtils) : IDisposable
     {
-        private readonly RevitUtils _revitUtils; 
-        private readonly ViewModel _viewModel;
-
-        public ViewWindow(ViewModel viewModel, RevitUtils revitUtils)
-        {
-            _revitUtils = revitUtils;
-            _viewModel = viewModel;
-        }
+        private readonly RevitUtils _revitUtils = revitUtils;
 
         public void ShowWindow()
         {
@@ -26,7 +19,7 @@ namespace RevitPersonalToolbox.SelectByParameter
             DataGridWindow dataGridWindow = new DataGridWindow
             {
                 // Set the ViewModel as the DataContext for the ViewWindow
-                DataContext = _viewModel
+                DataContext = viewModel
             };
 
             // Show the window
