@@ -123,18 +123,13 @@ namespace RevitPersonalToolbox
 
         public List<View> CheckViewTemplateAssignment(View selectedViewTemplate)
         {
-
-            Dictionary<string, dynamic> resultDictionary = new Dictionary<string, dynamic>();
+            //Dictionary<string, dynamic> resultDictionary = new Dictionary<string, dynamic>();
             List<View> assignedViews = new List<View>();
             IEnumerable<View> views = GetViews();
             foreach (View view in views)
             {
                 if (view.ViewTemplateId != selectedViewTemplate.Id) continue;
-                if (!resultDictionary.ContainsKey(view.Name))
-                {
-                    resultDictionary.Add(view.Name, view);
-                    assignedViews.Add(view);
-                }
+                assignedViews.Add(view);
             }
 
             return assignedViews;

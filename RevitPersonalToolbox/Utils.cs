@@ -9,22 +9,15 @@ using System.Windows.Interop;
 
 namespace RevitPersonalToolbox
 {
-    public class Utils
+    public class Utils(ExternalCommandData commandData)
     {
-        private ExternalCommandData CommandData { get; set; }
-        private UIDocument UiDocument { get; set; }
-        private Document Document { get; set; }
-
-        public Utils(ExternalCommandData commandData)
-        {
-            CommandData = commandData;
-            UiDocument = commandData.Application.ActiveUIDocument;
-            Document = commandData.Application.ActiveUIDocument.Document;
-        }
+        private ExternalCommandData CommandData { get; set; } = commandData;
+        private UIDocument UiDocument { get; set; } = commandData.Application.ActiveUIDocument;
+        private Document Document { get; set; } = commandData.Application.ActiveUIDocument.Document;
 
         public static Dictionary<string, dynamic> SortDictionary(Dictionary<string, dynamic> dictionary)
         {
-            Dictionary<string, dynamic> result = new Dictionary<string, dynamic>();
+            Dictionary<string, dynamic> result = new();
             IList<string> sortedKeys = dictionary.Keys.ToList().OrderBy(x => x).ToList();
 
             foreach (string key in sortedKeys)

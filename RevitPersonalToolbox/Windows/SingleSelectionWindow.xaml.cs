@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using Autodesk.Revit.DB;
 using RevitPersonalToolbox.TemplateActivityChecker;
 
@@ -18,8 +19,8 @@ namespace RevitPersonalToolbox.Windows
 
         private void OnApplyButtonClick(object sender, RoutedEventArgs e)
         {
-            if (!(DataContext is ViewModel viewModel)) return;
-            viewModel.SelectedItem = (View)ListBoxSelection.SelectedItem;
+            if (!(DataContext is ViewModel viewModel)) return; 
+            viewModel.SelectedItem = ListBoxSelection.SelectedItem;
 
             Close();
 
@@ -28,7 +29,8 @@ namespace RevitPersonalToolbox.Windows
 
         private void OnCancelButtonClick(object sender, RoutedEventArgs e)
         {
-            Close();
+            if (DataContext is not ViewModel) return;
+            
         }
     }
 }
