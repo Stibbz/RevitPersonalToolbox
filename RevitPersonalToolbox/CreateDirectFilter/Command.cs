@@ -14,8 +14,7 @@ public class Command : IExternalCommand
         Document document = commandData.Application.ActiveUIDocument.Document;
         RevitUtils revitUtils = new(commandData);
 
-        List<FilterRule> filterRules = Utils.CreateFilterRules(document);
-        Utils.CreateElementFilterFromFilterRules(filterRules);
+        // List<FilterRule> filterRules = Utils.CreateFilterRules(document);
         Utils.CreateViewFilter(document, document.ActiveView);
 
         BusinessLogic businessLogic = new(document);

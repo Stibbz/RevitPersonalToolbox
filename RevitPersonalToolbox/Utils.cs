@@ -40,29 +40,12 @@ namespace RevitPersonalToolbox
 
         public static List<FilterRule> CreateFilterRules(Document document)
         {
-            FilteredElementCollector parameterCollector = new(document, document.ActiveView.Id);
-            Parameter parameter = parameterCollector.FirstElement().get_Parameter(BuiltInParameter.ALL_MODEL_TYPE_NAME);
-            return [ParameterFilterRuleFactory.CreateEqualsRule(parameter.Id, "Beton_200", true)];
-        }
-
-        /// <summary>
-        /// Create an ElementFilter representing a conjunction ("ANDing together") of FilterRules.
-        /// </summary>
-        /// <param name="filterRules">A list of FilterRules</param>
-        /// <returns>The ElementFilter.</returns>
-        public static ElementFilter CreateElementFilterFromFilterRules(IList<FilterRule> filterRules)
-        {
-            // We use a LogicalAndFilter containing one ElementParameterFilter for each FilterRule.
-            // We could alternatively create a single ElementParameterFilter containing the entire list of FilterRules.
-            IList<ElementFilter> elementFilters = new List<ElementFilter>();
-            foreach (FilterRule filterRule in filterRules)
-            {
-                ElementParameterFilter elementParameterFilter = new(filterRule);
-                elementFilters.Add(elementParameterFilter);
-            }
-            LogicalAndFilter elemFilter = new(elementFilters);
-
-            return elemFilter;
+            // FilteredElementCollector parameterCollector = new(document, document.ActiveView.Id);
+            List<Wall> walls = new (new FilteredElementCollector(document).OfClass(typeof(Wall)).Cast<Wall>());
+            Parameter wallParameter = walls.First().get_Parameter(BuiltInParameter.ELEM_FAMILY_AND_TYPE_PARAM);
+            // Parameter parameter = parameterCollector.FirstElement().get_Parameter(BuiltInParameter.ELEM_FAMILY_AND_TYPE_PARAM);
+            
+            return [ParameterFilterRuleFactory.CreateEqualsRule(wallParameter.Id, "Beton_200")];
         }
 
         /// <summary>
@@ -98,6 +81,26 @@ namespace RevitPersonalToolbox
                 view.SetFilterVisibility(parameterFilterElement.Id, false);
                 t.Commit();
             }
+        }
+        
+        /// <summary>
+        /// Create an ElementFilter representing a conjunction ("ANDing together") of FilterRules.
+        /// </summary>
+        /// <param name="filterRules">A list of FilterRules</param>
+        /// <returns>The ElementFilter.</returns>
+        private static ElementFilter CreateElementFilterFromFilterRules(IList<FilterRule> filterRules)
+        {
+            // We use a LogicalAndFilter containing one ElementParameterFilter for each FilterRule.
+            // We could alternatively create a single ElementParameterFilter containing the entire list of FilterRules.
+            IList<ElementFilter> elementFilters = new List<ElementFilter>();
+            foreach (FilterRule filterRule in filterRules)
+            {
+                ElementParameterFilter elementParameterFilter = new(filterRule);
+                elementFilters.Add(elementParameterFilter);
+            }
+            LogicalAndFilter elemFilter = new(elementFilters);
+
+            return elemFilter;
         }
     }
 }
