@@ -19,7 +19,7 @@ namespace RevitPersonalToolbox.Windows
 
         private void OnApplyButtonClick(object sender, RoutedEventArgs e)
         {
-            if (!(DataContext is ViewModel viewModel)) return; 
+            if (DataContext is not ViewModel viewModel) return; 
             viewModel.SelectedItem = ListBoxSelection.SelectedItem;
 
             Close();

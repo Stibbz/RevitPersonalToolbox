@@ -1,4 +1,5 @@
-﻿using Autodesk.Revit.Attributes;
+﻿using System.Collections.Generic;
+using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
@@ -11,17 +12,21 @@ public class Command : IExternalCommand
     public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
     {
         Document document = commandData.Application.ActiveUIDocument.Document;
-        RevitUtils revitUtils = new RevitUtils(commandData);
-        
-        BusinessLogic businessLogic = new BusinessLogic(document);
-        ViewModel viewModel = new ViewModel(businessLogic, revitUtils);
-        ViewWindow viewWindow = new ViewWindow(viewModel, revitUtils);
+        RevitUtils revitUtils = new(commandData);
+
+        List<FilterRule> filterRules = Utils.CreateFilterRules(document);
+        Utils.CreateElementFilterFromFilterRules(filterRules);
+        Utils.CreateViewFilter(document, document.ActiveView);
+
+        BusinessLogic businessLogic = new(document);
+        ViewModel viewModel = new(businessLogic, revitUtils);
+        ViewWindow viewWindow = new(viewModel, revitUtils);
 
         const string mainTitle = "Create Filter";
         const string subTitle = "Select parameter to base the filter on";
 
         viewWindow.ShowWindow(mainTitle, subTitle, Utils.RevitWindow(commandData));
-            
+
         return Result.Succeeded;
     }
 }

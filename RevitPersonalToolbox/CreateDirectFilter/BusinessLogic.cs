@@ -1,16 +1,11 @@
-﻿using Autodesk.Revit.DB;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Autodesk.Revit.DB;
 
 namespace RevitPersonalToolbox.CreateDirectFilter;
 
-internal class BusinessLogic
+internal class BusinessLogic(Document document)
 {
-    // Fields
-    private readonly Document _document;
 
 
-    // Constructors
-    public BusinessLogic(Document document)
-    {
-        _document = document;
-    }
 }

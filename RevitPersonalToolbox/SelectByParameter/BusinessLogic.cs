@@ -7,19 +7,15 @@ using Autodesk.Revit.DB;
 
 namespace RevitPersonalToolbox.SelectByParameter
 {
-    internal class BusinessLogic
+    internal class BusinessLogic(Document document)
     {
         // Fields
-        private readonly Document _document;
+        private readonly Document _document = document;
         
         
         // Constructors
-        public BusinessLogic(Document document)
-        {
-            _document = document;
-        }
-        
-        
+
+
         // Methods
         /// <summary>
         /// Get ParameterModel data from a collection of elements
