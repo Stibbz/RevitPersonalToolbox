@@ -37,9 +37,10 @@ namespace RevitPersonalToolbox
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="view"></param>
-        public static void CreateViewFilter(Document doc, View view)
+        /// <param name="categories"></param>
+        /// <param name="parameterValue"></param>
+        public static void CreateViewFilter(Document doc, View view, ICollection<ElementId> categories, string parameterValue)
         {
-            List<ElementId> categories = [new ElementId(BuiltInCategory.OST_Walls)];
             List<FilterRule> filterRules = [];
 
             using (Transaction t = new(doc, "Add view filter"))
@@ -47,15 +48,21 @@ namespace RevitPersonalToolbox
                 t.Start();
 
                 // Create filter element associated to the input categories
+
                 ParameterFilterElement parameterFilterElement = ParameterFilterElement.Create(doc, "Example view filter", categories);
 
-                // Criterion 1 - wall type Function is "Exterior"
-                ElementId exteriorParamId = new(BuiltInParameter.FUNCTION_PARAM);
-                filterRules.Add(ParameterFilterRuleFactory.CreateEqualsRule(exteriorParamId, (int)WallFunction.Exterior));
+                ElementId familyNameId = new(BuiltInParameter.ALL_MODEL_FAMILY_NAME);
+                filterRules.Add(ParameterFilterRuleFactory.CreateContainsRule(familyNameId, parameterValue));
 
-                // Criterion 2 - wall height > some number
-                ElementId lengthId = new(BuiltInParameter.CURVE_ELEM_LENGTH);
-                filterRules.Add(ParameterFilterRuleFactory.CreateGreaterOrEqualRule(lengthId, 28.0, 0.0001));
+
+
+                //// Criterion 1 - wall type Function is "Exterior"
+                //ElementId exteriorParamId = new(BuiltInParameter.FUNCTION_PARAM);
+                //filterRules.Add(ParameterFilterRuleFactory.CreateEqualsRule(exteriorParamId, (int)WallFunction.Exterior));
+
+                //// Criterion 2 - wall height > some number
+                //ElementId lengthId = new(BuiltInParameter.CURVE_ELEM_LENGTH);
+                //filterRules.Add(ParameterFilterRuleFactory.CreateGreaterOrEqualRule(lengthId, 28.0, 0.0001));
 
                 ElementFilter elementFilter = CreateElementFilterFromFilterRules(filterRules);
                 parameterFilterElement.SetElementFilter(elementFilter);

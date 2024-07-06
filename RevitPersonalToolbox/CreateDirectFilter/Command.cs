@@ -13,7 +13,13 @@ public class Command : IExternalCommand
         RevitUtils revitUtils = new(commandData);
 
         // List<FilterRule> filterRules = Utils.CreateFilterRules(document);
-        Utils.CreateViewFilter(document, document.ActiveView);
+        // Get category from selected element
+        ICollection<ElementId> selectedItems = commandData.Application.ActiveUIDocument.Selection.GetElementIds();
+        IEnumerable<Element> selectedElements = selectedItems.Select(eId => document.GetElement(eId));
+        ICollection<ElementId> categoryIds = selectedElements.Select(selectedElement => selectedElement.Category.Id).ToList();
+        string parameterValue = "not implemented";
+
+        Utils.CreateViewFilter(document, document.ActiveView, categoryIds, parameterValue);
 
         BusinessLogic businessLogic = new(document);
         ViewModel viewModel = new(businessLogic, revitUtils);
