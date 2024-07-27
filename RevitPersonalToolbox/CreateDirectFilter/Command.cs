@@ -15,11 +15,19 @@ public class Command : IExternalCommand
         // List<FilterRule> filterRules = Utils.CreateFilterRules(document);
         // Get category from selected element
         ICollection<ElementId> selectedItems = commandData.Application.ActiveUIDocument.Selection.GetElementIds();
-        IEnumerable<Element> selectedElements = selectedItems.Select(eId => document.GetElement(eId));
-        ICollection<ElementId> categoryIds = selectedElements.Select(selectedElement => selectedElement.Category.Id).ToList();
-        string parameterValue = "not implemented";
+        ICollection<Element> selectedElements = new List<Element>();
+        foreach (ElementId selectedItem in selectedItems)
+        {
+            selectedElements.Add(document.GetElement(selectedItem));
+        }
+        //IEnumerable<Element> selectedElements = selectedItems.Select(eId => document.GetElement(eId));
+        //ICollection<ElementId> categoryIds = selectedElements.Select(selectedElement => selectedElement.Category.Id).ToList();
 
-        Utils.CreateViewFilter(document, document.ActiveView, categoryIds, parameterValue);
+        string filterName = "filter name testing";
+        var parameterValue = "100";
+
+        Utils utils = new(commandData);
+        utils.CreateViewFilter(document, document.ActiveView, filterName, selectedElements, parameterValue);
 
         BusinessLogic businessLogic = new(document);
         ViewModel viewModel = new(businessLogic, revitUtils);

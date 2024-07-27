@@ -39,7 +39,7 @@ namespace RevitPersonalToolbox
         /// <param name="view"></param>
         /// <param name="categories"></param>
         /// <param name="parameterValue"></param>
-        public static void CreateViewFilter(Document doc, View view, ICollection<ElementId> categories, string parameterValue)
+        public void CreateViewFilter(Document doc, View view, string filterName, IEnumerable<Element> selectedElements, string parameterValue)
         {
             List<FilterRule> filterRules = [];
 
@@ -47,23 +47,31 @@ namespace RevitPersonalToolbox
             {
                 t.Start();
 
-                // Create filter element associated to the input categories
+                // Create filter element using the provided categories
+                List<ElementId> categories = selectedElements.Select(x => x.Category.Id).ToList();
+                ParameterFilterElement parameterFilterElement = ParameterFilterElement.Create(doc, filterName, categories);
 
-                ParameterFilterElement parameterFilterElement = ParameterFilterElement.Create(doc, "Example view filter", categories);
+                IEnumerable<Parameter> parameters = null;
+                Parameter testParam = null;
 
-                ElementId familyNameId = new(BuiltInParameter.ALL_MODEL_FAMILY_NAME);
-                filterRules.Add(ParameterFilterRuleFactory.CreateContainsRule(familyNameId, parameterValue));
+                foreach (Element element in selectedElements)
+                {
+                    // Get Parameters from Element
+                    parameters = element.GetOrderedParameters();
 
+                    // Pick specific parameter for testing
+                    testParam = element.LookupParameter("Length");
+                }
+
+                
+                var value = GetParameterValue(testParam);
 
 
                 //// Criterion 1 - wall type Function is "Exterior"
                 //ElementId exteriorParamId = new(BuiltInParameter.FUNCTION_PARAM);
                 //filterRules.Add(ParameterFilterRuleFactory.CreateEqualsRule(exteriorParamId, (int)WallFunction.Exterior));
 
-                //// Criterion 2 - wall height > some number
-                //ElementId lengthId = new(BuiltInParameter.CURVE_ELEM_LENGTH);
-                //filterRules.Add(ParameterFilterRuleFactory.CreateGreaterOrEqualRule(lengthId, 28.0, 0.0001));
-
+                filterRules.Add(ParameterFilterRuleFactory.CreateGreaterOrEqualRule(testParam.Id, parameterValue));
                 ElementFilter elementFilter = CreateElementFilterFromFilterRules(filterRules);
                 parameterFilterElement.SetElementFilter(elementFilter);
 
@@ -71,6 +79,25 @@ namespace RevitPersonalToolbox
                 view.AddFilter(parameterFilterElement.Id);
                 view.SetFilterVisibility(parameterFilterElement.Id, false);
                 t.Commit();
+            }
+        }
+        
+        private string GetParameterValue(Parameter parameter)
+        {
+            switch (parameter.StorageType)
+            {
+                case StorageType.Double:
+                    return parameter.AsValueString();
+                case StorageType.ElementId:
+                    return parameter.AsValueString();
+                case StorageType.Integer:
+                    return parameter.AsValueString();
+                case StorageType.None:
+                    return parameter.AsValueString();
+                case StorageType.String:
+                    return parameter.AsString();
+                default:
+                    return null;
             }
         }
         
