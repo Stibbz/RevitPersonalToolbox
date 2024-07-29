@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using RevitPersonalToolbox.TemplateActivityChecker;
+using RevitPersonalToolbox.CreateDirectFilter;
 
 namespace RevitPersonalToolbox.Windows
 {
@@ -7,18 +7,16 @@ namespace RevitPersonalToolbox.Windows
     {
         public bool Cancelled { get; set; }
         
-        public SingleSelectionWindow(string mainTitle, string subTitle, Window owner)
+        public SingleSelectionWindow(Window owner)
         {
             InitializeComponent();
-            MainTitle.Content = mainTitle;
-            SubTitle.Content = subTitle;
             Owner = owner;
         }
 
         private void OnApplyButtonClick(object sender, RoutedEventArgs e)
         {
-            if (DataContext is not ViewModel viewModel) return; 
-            viewModel.SelectedItem = ListBoxSelection.SelectedItem;
+            if (DataContext is not ViewModel viewModel) return;
+            viewModel.SelectedItems = ListBoxSelection.SelectedItem;
 
             Close();
 

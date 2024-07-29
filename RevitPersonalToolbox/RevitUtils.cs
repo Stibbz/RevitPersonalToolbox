@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Data;
 using System.Reflection;
 using Autodesk.Revit.UI;
 
@@ -74,7 +76,7 @@ namespace RevitPersonalToolbox
                 .ToElements();
         }
 
-        public IEnumerable<Element> GetSelectedElements()
+        public ICollection<Element> GetSelectedElements()
         {
             IEnumerable<ElementId> selection = UiDocument.Selection.GetElementIds();
             List<Element> selectedElements = selection.Select(id => Document.GetElement(id)).ToList();
@@ -130,6 +132,54 @@ namespace RevitPersonalToolbox
 
             return assignedViews;
         }
-        
+
+        /// <summary>
+        /// Creates a new view filter matching multiple criteria.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="view"></param>
+        /// <param name="filterName"></param>
+        /// <param name="selectedElements"></param>
+        /// <param name="parameterValue"></param>
+        public void CreateViewFilter(ICollection<Element> selectedElements, string filterName, string parameterValue)
+        {
+            List<FilterRule> filterRules = [];
+            using Transaction t = new(Document, "Add view filter");
+            t.Start();
+
+            Parameter parameter = null;
+
+            ICollection<ElementId> categories = selectedElements.Select(x => x.Category.Id).ToList();
+            
+            ParameterFilterElement parameterFilterElement = ParameterFilterElement.Create(Document, filterName, categories);
+            filterRules.Add(ParameterFilterRuleFactory.CreateGreaterOrEqualRule(parameter.Id, parameterValue, false));
+            ElementFilter elementFilter = CreateElementFilterFromFilterRules(filterRules);
+            parameterFilterElement.SetElementFilter(elementFilter);
+
+            //// Apply filter to view
+            //view.AddFilter(parameterFilterElement.Id);
+            //view.SetFilterVisibility(parameterFilterElement.Id, false);
+            t.Commit();
+        }
+
+        /// <summary>
+        /// Create an ElementFilter representing a conjunction ("ANDing together") of FilterRules.
+        /// </summary>
+        /// <param name="filterRules">A list of FilterRules</param>
+        /// <returns>The ElementFilter.</returns>
+        private static ElementFilter CreateElementFilterFromFilterRules(IList<FilterRule> filterRules)
+        {
+            // We use a LogicalAndFilter containing one ElementParameterFilter for each FilterRule.
+            // We could alternatively create a single ElementParameterFilter containing the entire list of FilterRules.
+            IList<ElementFilter> elementFilters = new List<ElementFilter>();
+            foreach (FilterRule filterRule in filterRules)
+            {
+                ElementParameterFilter elementParameterFilter = new(filterRule);
+                elementFilters.Add(elementParameterFilter);
+            }
+            LogicalAndFilter elemFilter = new(elementFilters);
+
+            return elemFilter;
+        }
     }
 }

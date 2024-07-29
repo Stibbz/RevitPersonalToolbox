@@ -7,16 +7,13 @@ internal class ViewWindow(ViewModel viewModel, RevitUtils revitUtils)
 {
     private readonly RevitUtils _revitUtils = revitUtils;
 
-    public void ShowWindow(string mainTitle, string subTitle, Window owner)
+    public void ShowWindow(Window owner)
     {
-        // Create an instance of your WPF window (ViewWindow)
-        SingleSelectionWindow singleSelectionWindow = new SingleSelectionWindow(mainTitle, subTitle, owner)
+        SingleSelectionWindow singleSelectionWindow = new(owner)
         {
-            // Set the ViewModel as the DataContext for the ViewWindow
             DataContext = viewModel
         };
 
-        // Show the window
         singleSelectionWindow.Show();
     }
 }

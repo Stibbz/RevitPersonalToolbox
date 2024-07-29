@@ -32,56 +32,38 @@ namespace RevitPersonalToolbox
             return RevitWindow;
         }
 
-        /// <summary>
-        /// Creates a new view filter matching multiple criteria.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="view"></param>
-        /// <param name="categories"></param>
-        /// <param name="parameterValue"></param>
-        public void CreateViewFilter(Document doc, View view, string filterName, IEnumerable<Element> selectedElements, string parameterValue)
+        public static IEnumerable<Parameter> GetParametersFromElements(ICollection<Element> selectedElements)
         {
-            List<FilterRule> filterRules = [];
+            if (selectedElements == null) return null;
 
-            using (Transaction t = new(doc, "Add view filter"))
+            IEnumerable<Parameter> parameters = null;
+            foreach (Element element in selectedElements)
             {
-                t.Start();
-
-                // Create filter element using the provided categories
-                List<ElementId> categories = selectedElements.Select(x => x.Category.Id).ToList();
-                ParameterFilterElement parameterFilterElement = ParameterFilterElement.Create(doc, filterName, categories);
-
-                IEnumerable<Parameter> parameters = null;
-                Parameter testParam = null;
-
-                foreach (Element element in selectedElements)
-                {
-                    // Get Parameters from Element
-                    parameters = element.GetOrderedParameters();
-
-                    // Pick specific parameter for testing
-                    testParam = element.LookupParameter("Length");
-                }
-
-                
-                var value = GetParameterValue(testParam);
-
-
-                //// Criterion 1 - wall type Function is "Exterior"
-                //ElementId exteriorParamId = new(BuiltInParameter.FUNCTION_PARAM);
-                //filterRules.Add(ParameterFilterRuleFactory.CreateEqualsRule(exteriorParamId, (int)WallFunction.Exterior));
-
-                filterRules.Add(ParameterFilterRuleFactory.CreateGreaterOrEqualRule(testParam.Id, parameterValue));
-                ElementFilter elementFilter = CreateElementFilterFromFilterRules(filterRules);
-                parameterFilterElement.SetElementFilter(elementFilter);
-
-                // Apply filter to view
-                view.AddFilter(parameterFilterElement.Id);
-                view.SetFilterVisibility(parameterFilterElement.Id, false);
-                t.Commit();
+                parameters = element.GetOrderedParameters();
             }
+
+            return parameters;
         }
         
+        public Parameter PickParameter(ICollection<Element> selectedElements)
+        {
+            if (selectedElements == null) return null;
+            
+            IEnumerable<Parameter> parameters = null;
+            Parameter parameter = null;
+
+            foreach (Element element in selectedElements)
+            {
+                // Get Parameters from Element
+                parameters = element.GetOrderedParameters();
+
+                // Pick specific parameter for testing
+                parameter = element.LookupParameter("Length");
+            }
+
+            return parameter;
+        }
+
         private string GetParameterValue(Parameter parameter)
         {
             switch (parameter.StorageType)
@@ -100,25 +82,5 @@ namespace RevitPersonalToolbox
                     return null;
             }
         }
-        
-        /// <summary>
-        /// Create an ElementFilter representing a conjunction ("ANDing together") of FilterRules.
-        /// </summary>
-        /// <param name="filterRules">A list of FilterRules</param>
-        /// <returns>The ElementFilter.</returns>
-        private static ElementFilter CreateElementFilterFromFilterRules(IList<FilterRule> filterRules)
-        {
-            // We use a LogicalAndFilter containing one ElementParameterFilter for each FilterRule.
-            // We could alternatively create a single ElementParameterFilter containing the entire list of FilterRules.
-            IList<ElementFilter> elementFilters = new List<ElementFilter>();
-            foreach (FilterRule filterRule in filterRules)
-            {
-                ElementParameterFilter elementParameterFilter = new(filterRule);
-                elementFilters.Add(elementParameterFilter);
-            }
-            LogicalAndFilter elemFilter = new(elementFilters);
-
-            return elemFilter;
         }
-    }
 }

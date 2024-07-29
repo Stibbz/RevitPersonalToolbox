@@ -32,10 +32,10 @@
             Foreground="Gray"
         />
         <ListBox 
-            x:Name="ListBoxSelection" 
-            ItemsSource="{Binding RevitViewDataModel.Properties}"
-            Margin="8,4,8,4"
-            Grid.Row="2"    
+            x:Name="ListBoxSelection"
+            Margin="8,4, 8,4"
+            Grid.Row="2"
+            ItemsSource="{Binding Items}"
             SelectionMode="single">
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -44,10 +44,8 @@
                             <ColumnDefinition Width="500" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Key}" 
+                        <TextBlock Text="{Binding}" 
                                    Grid.Column="0" />
-                        <TextBlock Text="{Binding Value}" 
-                                   Grid.Column="1"/>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
