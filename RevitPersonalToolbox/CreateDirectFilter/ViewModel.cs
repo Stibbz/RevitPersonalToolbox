@@ -1,68 +1,54 @@
-﻿using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
+﻿namespace RevitPersonalToolbox.CreateDirectFilter;
 
-namespace RevitPersonalToolbox.CreateDirectFilter;
-
-internal class ViewModel(BusinessLogic businessLogic, RevitUtils revitUtils) : INotifyCollectionChanged
+internal class ViewModel(BusinessLogic businessLogic, RevitUtils revitUtils)
 {
     // Fields
     private readonly BusinessLogic _businessLogic = businessLogic;
     private readonly RevitUtils _revitUtils = revitUtils;
-    private ObservableCollection<string> _items;
+    public Dictionary<string, dynamic> Dictionary { get; set; } = new();
+
 
     //Properties
     // DialogResult is used to determine the result of the dialog.
     // True when user pressed Apply, if null or false no selection was made.
     public bool DialogResult { get; set; }
-    public object ActiveView { get; set; }
-    public object SelectedItems { get; set; }
-    public ObservableCollection<string> Items
+    public object SelectedItem { get; set; }
+
+    public void LoadData()
     {
-        get => _items;
-        set
+        ICollection<Element> allSelectedElements = _revitUtils.GetAllSelectedElements();
+        ICollection<ElementId> parameters = _revitUtils.CreateApplicableElementFilters(allSelectedElements);
+
+        Dictionary<string, dynamic> parameterDictionary = new();
+        foreach (ElementId parameter in parameters)
         {
-            _items = value;
-            OnPropertyChanged(nameof(Items));
+            BuiltInParameter bip = (BuiltInParameter)parameter.IntegerValue;
+            string label = LabelUtils.GetLabelFor(bip);
+            parameterDictionary.Add(label, parameter);
         }
-    }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        Dictionary = Utils.SortDictionary(parameterDictionary);
     }
 
     public void ApplySelection()
     {
         DialogResult = true;
-        if (SelectedItems == null) return;
+        if (SelectedItem == null) return;
 
-        ICollection<Element> selectedElements = (ICollection<Element>)SelectedItems;
-
-
-        //Variables (temporary)
+        //TODO: Variables (temporary)
         string filterName = "filter name testing";
         string parameterValue = "100";
 
-        revitUtils.CreateViewFilter(selectedElements, filterName, parameterValue);
+        // Hier zijn we gebleven met de dictionary als resultaat
+
+        KeyValuePair<string, dynamic> kvp = (KeyValuePair<string, dynamic>)SelectedItem;
+        string selectedParameterName = kvp.Key;
+        ElementId selectedParameter = kvp.Value;
+
+
+        //DataModel dataModel = (DataModel)SelectedItem;
+        //Parameter selectedParameter = dataModel.GetSourceObject();
+
+        //ICollection<Element> selectedElements = _revitUtils.GetAllSelectedElements();
+        //revitUtils.CreateViewFilter(selectedElements, selectedParameter, filterName, parameterValue);
     }
-
-    public void LoadData()
-    {
-        ICollection<Element> selectedElements = _revitUtils.GetSelectedElements();
-
-        IEnumerable<Parameter> parameters = Utils.GetParametersFromElements(selectedElements);
-        Dictionary<string, dynamic> paramDict = new();
-        foreach (Parameter parameter in parameters)
-        {
-            paramDict.Add(parameter.Definition.Name, parameter);
-        }
-
-        paramDict = Utils.SortDictionary(paramDict);
-        Items = new ObservableCollection<string>(paramDict.Keys);
-    }
-
-    public event NotifyCollectionChangedEventHandler CollectionChanged;
 }

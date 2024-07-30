@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using RevitPersonalToolbox.CreateDirectFilter;
 
 namespace RevitPersonalToolbox.Windows
@@ -11,12 +12,13 @@ namespace RevitPersonalToolbox.Windows
         {
             InitializeComponent();
             Owner = owner;
+
         }
 
         private void OnApplyButtonClick(object sender, RoutedEventArgs e)
         {
             if (DataContext is not ViewModel viewModel) return;
-            viewModel.SelectedItems = ListBoxSelection.SelectedItem;
+            viewModel.SelectedItem = ListBoxSelection.SelectedItem;
 
             Close();
 

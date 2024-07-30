@@ -32,19 +32,6 @@ namespace RevitPersonalToolbox
             return RevitWindow;
         }
 
-        public static IEnumerable<Parameter> GetParametersFromElements(ICollection<Element> selectedElements)
-        {
-            if (selectedElements == null) return null;
-
-            IEnumerable<Parameter> parameters = null;
-            foreach (Element element in selectedElements)
-            {
-                parameters = element.GetOrderedParameters();
-            }
-
-            return parameters;
-        }
-        
         public Parameter PickParameter(ICollection<Element> selectedElements)
         {
             if (selectedElements == null) return null;
@@ -54,7 +41,7 @@ namespace RevitPersonalToolbox
 
             foreach (Element element in selectedElements)
             {
-                // Get Parameters from Element
+                // Get Parameters from SourceObject
                 parameters = element.GetOrderedParameters();
 
                 // Pick specific parameter for testing

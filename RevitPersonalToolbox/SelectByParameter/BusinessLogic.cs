@@ -20,7 +20,7 @@
             List<ParameterModel> dataModelParameters = new List<ParameterModel>();
             foreach (Element element in elements)
             {
-                // Get Parameters from Element
+                // Get Parameters from SourceObject
                 IEnumerable<Parameter> parameters = element.GetOrderedParameters();
                 
                 // Populate a RevitViewDataModel for each Parameter

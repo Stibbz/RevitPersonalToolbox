@@ -48,7 +48,7 @@ namespace RevitPersonalToolbox.SelectByParameter
         public void LoadData()
         {
             // Get all selected elements
-            List<Element> selectedElements = _revitUtils.GetSelectedElements()?.ToList() ?? new List<Element>();
+            List<Element> selectedElements = _revitUtils.GetAllSelectedElements()?.ToList() ?? new List<Element>();
             
 
             // Refactor this stuff so we actually end up with distinct Parameters only...
@@ -76,7 +76,7 @@ namespace RevitPersonalToolbox.SelectByParameter
         private void UnstructuredWorkingVersion()
         {
             // // Get all selected elements
-            // List<Element> selectedElements = _revitUtils.GetSelectedElements().ToList();
+            // List<SourceObject> selectedElements = _revitUtils.GetAllSelectedElements().ToList();
             // if (!selectedElements.Any())
             // {
             //     TaskDialog.Show("Error", "Select items first.");
@@ -85,7 +85,7 @@ namespace RevitPersonalToolbox.SelectByParameter
             // Create WPF Form with DataGrid
             // DataGridWindow dataGridWindow = new DataGridWindow { TitleLabel = { Content = "Select by Parameter" } };
             
-            // // Get all Parameters and their Values from every selected Element
+            // // Get all Parameters and their Values from every selected SourceObject
             // IOrderedEnumerable<ParameterModel> dataModelParameters = _businessLogic.GetParameterData(selectedElements);
             
             // // Get only distinct Parameters and their values (<varies> if varying values).

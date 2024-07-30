@@ -17,11 +17,11 @@ public class Command : IExternalCommand
 
         ViewModel viewModel = new(businessLogic, revitUtils);
         viewModel.LoadData();
-      
+
         SingleSelectionWindow mainWindow = new(Utils.RevitWindow(commandData))
         {
-            MainTitle = { Content = "Parameters"},
-            SubTitle = { Content = "Determine parameter to base the filter on"},
+            MainTitle = { Content = "Parameters" },
+            SubTitle = { Content = "Determine parameter to base the filter on" },
             DataContext = viewModel
         };
         mainWindow.ShowDialog();

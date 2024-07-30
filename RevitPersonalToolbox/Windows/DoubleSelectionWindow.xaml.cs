@@ -29,10 +29,10 @@ namespace RevitPersonalToolbox.Windows
         {
             this.SelectedItems = new List<dynamic>();
             this.Cancelled = false;
-            //var selectedItems = ItemNamesListBox.SelectedItems;
+            //var selectedItems = ItemNamesListBox.SelectedItem;
             //foreach (string item in selectedItems)
             //{
-            //    SelectedItems.Add(Items[item]);
+            //    SelectedItem.Add(Items[item]);
             //}
             this.Close();
         }
