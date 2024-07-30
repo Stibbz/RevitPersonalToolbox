@@ -38,17 +38,18 @@ internal class ViewModel(BusinessLogic businessLogic, RevitUtils revitUtils)
         string filterName = "filter name testing";
         string parameterValue = "100";
 
-        // Hier zijn we gebleven met de dictionary als resultaat
 
+        // Hier zijn we gebleven met de dictionary als resultaat
         KeyValuePair<string, dynamic> kvp = (KeyValuePair<string, dynamic>)SelectedItem;
         string selectedParameterName = kvp.Key;
         ElementId selectedParameter = kvp.Value;
 
 
+
         //DataModel dataModel = (DataModel)SelectedItem;
         //Parameter selectedParameter = dataModel.GetSourceObject();
 
-        //ICollection<Element> selectedElements = _revitUtils.GetAllSelectedElements();
-        //revitUtils.CreateViewFilter(selectedElements, selectedParameter, filterName, parameterValue);
+        ICollection<Element> selectedElements = _revitUtils.GetAllSelectedElements();
+        revitUtils.CreateViewFilter(selectedElements, selectedParameter, filterName, parameterValue);
     }
 }

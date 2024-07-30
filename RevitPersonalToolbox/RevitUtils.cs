@@ -151,16 +151,15 @@ namespace RevitPersonalToolbox
         /// <param name="filterName"></param>
         /// <param name="selectedElements"></param>
         /// <param name="parameterValue"></param>
-        public void CreateViewFilter(ICollection<Element> selectedElements, Parameter selectedParameter, string filterName, string parameterValue)
+        public void CreateViewFilter(ICollection<Element> selectedElements, ElementId selectedParameter, string filterName, string parameterValue)
         {
             using Transaction t = new(Document, "Add view filter");
             t.Start();
 
-            Parameter parameter = selectedParameter;
 
             // Create filter rules (i.e. "length =< 100")
             List<FilterRule> filterRules = [];
-            filterRules.Add(ParameterFilterRuleFactory.CreateGreaterOrEqualRule(parameter.Id, parameterValue, false));
+            filterRules.Add(ParameterFilterRuleFactory.CreateGreaterOrEqualRule(selectedParameter, parameterValue, false));
             ElementFilter elementFilter = CreateElementFilterFromFilterRules(filterRules);
 
             // Create filter using the filter rules
