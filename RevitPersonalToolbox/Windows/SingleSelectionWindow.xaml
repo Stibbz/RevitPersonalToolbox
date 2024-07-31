@@ -35,8 +35,8 @@
             x:Name="ListBoxSelection"
             Margin="8,4, 8,4"
             Grid.Row="2"
-            SelectionMode="Multiple"
-            ItemsSource="{Binding Dictionary}">
+            SelectionMode="Single"
+            ItemsSource="{Binding ParameterDictionary}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>

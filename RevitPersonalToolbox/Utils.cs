@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Interop;
 using Autodesk.Revit.UI;
+using RevitPersonalToolbox.Windows;
+using RevitPersonalToolbox.CreateDirectFilter.Windows;
 
 namespace RevitPersonalToolbox
 {
@@ -18,13 +20,12 @@ namespace RevitPersonalToolbox
             foreach (string key in sortedKeys)
             {
                 result.Add(key, dictionary[key]);
-
             }
 
             return result;
         }
 
-        public static Window RevitWindow(ExternalCommandData commandData)
+        public static Window GetRevitWindowOwner(ExternalCommandData commandData)
         {
             IntPtr RevitWindowHandle = commandData.Application.MainWindowHandle;
             HwndSource hwndSource = HwndSource.FromHwnd(RevitWindowHandle);
@@ -32,10 +33,21 @@ namespace RevitPersonalToolbox
             return RevitWindow;
         }
 
+        public static void CallNewWindow(ExternalCommandData commandData, string mainTitle, string subTitle, string selectedParameter)
+        {
+            FilterInputWindow newWindow = new(GetRevitWindowOwner(commandData))
+            {
+                MainTitle = { Text = mainTitle },
+                SubTitle = { Text = subTitle },
+                ParameterName = { Text = selectedParameter },
+            };
+            newWindow.ShowDialog();
+        }
+
         public Parameter PickParameter(ICollection<Element> selectedElements)
         {
             if (selectedElements == null) return null;
-            
+
             IEnumerable<Parameter> parameters = null;
             Parameter parameter = null;
 
@@ -69,5 +81,5 @@ namespace RevitPersonalToolbox
                     return null;
             }
         }
-        }
+    }
 }

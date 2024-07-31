@@ -89,7 +89,7 @@ namespace RevitPersonalToolbox.SelectByParameter
             // IOrderedEnumerable<ParameterModel> dataModelParameters = _businessLogic.GetParameterData(selectedElements);
             
             // // Get only distinct Parameters and their values (<varies> if varying values).
-            // Dictionary<string, List<string>> distinctNamesAndValues = _businessLogic.GetDistinctNames(dataModelParameters);
+            // ParameterDictionary<string, List<string>> distinctNamesAndValues = _businessLogic.GetDistinctNames(dataModelParameters);
 
             // Initialize Datatable and populate with distinct Parameters and values
             // DataTable dataTable = _businessLogic.CreateDataTable();
@@ -102,7 +102,7 @@ namespace RevitPersonalToolbox.SelectByParameter
         }
 
         /// <summary>
-        /// Populate DataTable using Dictionary
+        /// Populate DataTable using ParameterDictionary
         /// </summary>
         /// <param name="distinctNamesAndValues"></param>
         /// <param name="dataTable"></param>

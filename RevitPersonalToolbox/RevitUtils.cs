@@ -122,16 +122,49 @@ namespace RevitPersonalToolbox
                 .Where(v => v.CanUseTemporaryVisibilityModes());
         }
 
-        public IEnumerable<Parameter> GetAllParameters()
+        public Dictionary<string, dynamic> GetParameterData(ICollection<Element> allSelectedElements, ICollection<ElementId> parameters)
         {
-            return new FilteredElementCollector(Document)
-                .OfClass(typeof(Parameter))
-                .Cast<Parameter>();
+            Dictionary<string, dynamic> parameterDictionary = new();
+            foreach (Element element in allSelectedElements)
+            {
+                foreach (ElementId parameter in parameters)
+                {
+                    BuiltInParameter bip = (BuiltInParameter)parameter.IntegerValue;
+                    string name = GetParameterName(bip, element);
+
+                    if (string.IsNullOrEmpty(name)) continue;
+                    if (!parameterDictionary.ContainsKey(name))
+                    {
+                        parameterDictionary.Add(name, parameter);
+                    }
+                }
+            }
+
+            return parameterDictionary;
+        }
+
+        string GetParameterName(BuiltInParameter bip, Element element)
+        {
+            try
+            {
+                return LabelUtils.GetLabelFor(bip);
+            }
+            catch (Autodesk.Revit.Exceptions.InvalidOperationException)
+            {
+                try
+                {
+                    return element.get_Parameter(bip).Definition.Name;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
         }
 
         public List<View> CheckViewTemplateAssignment(View selectedViewTemplate)
         {
-            //Dictionary<string, dynamic> resultDictionary = new Dictionary<string, dynamic>();
+            //ParameterDictionary<string, dynamic> resultDictionary = new ParameterDictionary<string, dynamic>();
             List<View> assignedViews = new List<View>();
             IEnumerable<View> views = GetViews();
             foreach (View view in views)
@@ -146,38 +179,31 @@ namespace RevitPersonalToolbox
         /// <summary>
         /// Creates a new view filter matching multiple criteria.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="view"></param>
+        /// <param name="parameters"></param>
         /// <param name="filterName"></param>
-        /// <param name="selectedElements"></param>
-        /// <param name="parameterValue"></param>
-        public void CreateViewFilter(ICollection<Element> selectedElements, ElementId selectedParameter, string filterName, string parameterValue)
+        /// <param name="elements"></param>
+        /// <param name="value"></param>
+        public ParameterFilterElement CreateViewFilter(ICollection<Element> elements, ElementId parameters, string filterName, string value)
         {
-            using Transaction t = new(Document, "Add view filter");
+            using Transaction t = new(Document, "Created Filter based on selection");
             t.Start();
-
 
             // Create filter rules (i.e. "length =< 100")
             List<FilterRule> filterRules = [];
-            filterRules.Add(ParameterFilterRuleFactory.CreateGreaterOrEqualRule(selectedParameter, parameterValue, false));
+            filterRules.Add(ParameterFilterRuleFactory.CreateGreaterOrEqualRule(parameters, value, false));
             ElementFilter elementFilter = CreateElementFilterFromFilterRules(filterRules);
 
             // Create filter using the filter rules
-            // TODO: Add fallback mechanism when name is already in use
-            ICollection<ElementId> categories = selectedElements.Select(x => x.Category.Id).ToList();
+            // TODO: Add fallback mechanism when filter name is already in use
+            ICollection<ElementId> categories = elements.Select(x => x.Category.Id).ToList();
             ParameterFilterElement parameterFilterElement = ParameterFilterElement.Create(Document, filterName, categories);
-            ParameterFilterElement.AllRuleParametersApplicable(Document, categories, elementFilter);
-
             //ParameterFilterElement.AllRuleParametersApplicable(Document, categories, elementFilter);
-            //ParameterFilterElement.AllRuleParametersApplicable(elementFilter);
-
-
+            
             parameterFilterElement.SetElementFilter(elementFilter);
 
-            //// Apply filter to view
-            //view.AddFilter(parameterFilterElement.Id);
-            //view.SetFilterVisibility(parameterFilterElement.Id, false);
             t.Commit();
+
+            return parameterFilterElement;
         }
 
         /// <summary>
@@ -200,28 +226,23 @@ namespace RevitPersonalToolbox
             return elemFilter;
         }
 
-        public ICollection<ElementId> CreateApplicableElementFilters(ICollection<Element> allSelectedElements)
+        public ICollection<ElementId> GetApplicableParameters(ICollection<Element> allSelectedElements)
         {
             if (allSelectedElements == null) return null;
+
             ICollection<ElementId> categories = allSelectedElements.Select(x => x.Category.Id).ToList();
-
-            string parameterValue = "to be replaced";
-
             ICollection<ElementId> filterableParameterIds = ParameterFilterUtilities.GetFilterableParametersInCommon(Document, categories);
-            ICollection<Parameter> filterableParameters = new List<Parameter>();
-
-            // This whole foreach loop was created before finding out about GetFilterableParametersInCommon(). Therefore it's most probably obsolete now, since every parameter should always pass anyways.
-            foreach (ElementId parameter in filterableParameterIds)
-            {
-                BuiltInParameter bip = (BuiltInParameter)parameter.IntegerValue;
-                string label = LabelUtils.GetLabelFor(bip);
-
-                //filterableParameters.Add(allSelectedElements.First().LookupParameter(label));
-                Element element = allSelectedElements.First();
-                filterableParameters.Add(element.FindParameter(bip));
-            }
 
             return filterableParameterIds;
+        }
+
+        public void ApplyFilterToView(ParameterFilterElement viewFilter)
+        {
+            View view = Document.ActiveView;
+
+            // Apply filter to view
+            view.AddFilter(viewFilter.Id);
+            view.SetFilterVisibility(viewFilter.Id, false);
         }
     }
 }

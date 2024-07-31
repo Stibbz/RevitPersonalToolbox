@@ -56,7 +56,7 @@
 //            }
 
 
-//            SingleSelectionWindow resultWindow = new(mainTitle, subTitle, Utils.RevitWindow(commandData))
+//            SingleSelectionWindow resultWindow = new(mainTitle, subTitle, Utils.GetRevitWindowOwner(commandData))
 //            {
 //                DataContext = resultViewModel
 //            };

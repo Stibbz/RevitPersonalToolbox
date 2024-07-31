@@ -31,7 +31,7 @@
 //        }
 //        viewModel.RevitViewDataModel.Properties = Utils.SortDictionary(viewModel.RevitViewDataModel.Properties);
             
-//        //SingleSelectionWindow mainWindow = new(mainTitle, subTitle,Utils.RevitWindow(commandData))
+//        //SingleSelectionWindow mainWindow = new(mainTitle, subTitle,Utils.GetRevitWindowOwner(commandData))
 //        //{
 //        //    DataContext = viewModel
 //        //};
