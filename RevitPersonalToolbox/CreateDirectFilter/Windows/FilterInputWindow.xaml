@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="RevitPersonalToolbox" 
         Height="384" Width="576" MinWidth="864"
-        WindowStartupLocation="CenterOwner"
-        >
+        WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -64,26 +63,28 @@
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBox
+            <ComboBox
             x:Name="FilterNameInput"
             Margin="8,8,8,8"
             Grid.Column="0"
-            Text="Filter Name">
-            </TextBox>
+            Text="Filter Name"
+            IsEditable="True">
+            </ComboBox>
 
-            <TextBox
+            <ComboBox
             x:Name="EquationSelect"
             Margin="8,8,8,8"
             Grid.Column="1"
             Text="Equation">
-            </TextBox>
+            </ComboBox>
 
-            <TextBox
+            <ComboBox
             x:Name="ParameterValueInput"
             Margin="8,8,8,8"
             Grid.Column="2"
-            Text="Parameter Value">
-            </TextBox>
+            Text="Parameter Value"
+            IsEditable="True">
+            </ComboBox>
         </Grid>
 
         <Button

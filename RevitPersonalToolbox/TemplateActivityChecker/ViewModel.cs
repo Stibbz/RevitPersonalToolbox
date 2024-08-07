@@ -24,7 +24,7 @@
 //        public RevitViewDataModel RevitViewDataModel { get; } = new();
 
 
-//        public void LoadData()
+//        public void LoadParameterData()
 //        {
 //            RevitViewDataModel.ViewTemplates = revitUtils.GetViewTemplates();
 //            RevitViewDataModel.Views = revitUtils.GetViews();

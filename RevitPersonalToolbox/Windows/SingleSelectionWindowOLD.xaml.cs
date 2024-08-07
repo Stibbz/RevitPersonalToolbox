@@ -12,7 +12,6 @@ namespace RevitPersonalToolbox.Windows
         {
             InitializeComponent();
             Owner = owner;
-
         }
 
         private void OnApplyButtonClick(object sender, RoutedEventArgs e)
@@ -22,7 +21,7 @@ namespace RevitPersonalToolbox.Windows
 
             Close();
 
-            viewModel.ApplySelection();
+            //viewModel.ApplySelection();
         }
 
         private void OnCancelButtonClick(object sender, RoutedEventArgs e)

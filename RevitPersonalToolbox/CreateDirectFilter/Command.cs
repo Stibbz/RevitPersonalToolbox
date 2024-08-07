@@ -1,6 +1,7 @@
-﻿using Autodesk.Revit.Attributes;
+﻿using System.Windows;
+using Autodesk.Revit.Attributes;
 using Autodesk.Revit.UI;
-using RevitPersonalToolbox.Windows;
+using RevitPersonalToolbox.CreateDirectFilter.Windows;
 
 namespace RevitPersonalToolbox.CreateDirectFilter;
 
@@ -8,24 +9,33 @@ namespace RevitPersonalToolbox.CreateDirectFilter;
 [Transaction(TransactionMode.Manual)]
 public class Command : IExternalCommand
 {
+    public static bool Cancelled { get; set; }
+
     public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
     {
-        Document document = commandData.Application.ActiveUIDocument.Document;
-
         RevitUtils revitUtils = new(commandData);
-        BusinessLogic businessLogic = new(document);
+        ViewModel viewModel = new(revitUtils);
+        viewModel.LoadParameterData();
 
-        ViewModel viewModel = new(commandData, businessLogic, revitUtils);
-        viewModel.LoadData();
+        Window windowOwner = Utils.GetRevitWindowOwner(commandData);
 
-        SingleSelectionWindow mainWindow = new(Utils.GetRevitWindowOwner(commandData))
+        if (ShowDialog(new SingleSelectionWindow(windowOwner, viewModel)) &&
+            ShowDialog(new PickFilterName(windowOwner, viewModel)) &&
+            ShowDialog(new FilterInputWindow(windowOwner, viewModel)))
         {
-            MainTitle = { Content = "Parameters" },
-            SubTitle = { Content = "Determine which parameter to base the filter on" },
-            DataContext = viewModel
-        };
-        mainWindow.ShowDialog();
+            viewModel.ApplyInput();
+        }
 
-        return Result.Succeeded;
+        return Cancelled ? Result.Cancelled : Result.Succeeded;
+    }
+
+    private bool ShowDialog(Window window)
+    {
+        if (!Cancelled)
+        {
+            window.ShowDialog();
+        }
+
+        return !Cancelled;
     }
 }

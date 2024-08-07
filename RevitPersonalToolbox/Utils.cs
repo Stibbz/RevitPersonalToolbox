@@ -1,8 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Interop;
 using Autodesk.Revit.UI;
-using RevitPersonalToolbox.Windows;
-using RevitPersonalToolbox.CreateDirectFilter.Windows;
+using RevitPersonalToolbox.CreateDirectFilter;
 
 namespace RevitPersonalToolbox
 {
@@ -14,7 +13,7 @@ namespace RevitPersonalToolbox
 
         public static Dictionary<string, dynamic> SortDictionary(Dictionary<string, dynamic> dictionary)
         {
-            Dictionary<string, dynamic> result = new();
+            Dictionary<string, dynamic> result = [];
             IList<string> sortedKeys = dictionary.Keys.ToList().OrderBy(x => x).ToList();
 
             foreach (string key in sortedKeys)
@@ -33,28 +32,27 @@ namespace RevitPersonalToolbox
             return RevitWindow;
         }
 
-        public static void CallNewWindow(ExternalCommandData commandData, string mainTitle, string subTitle, string selectedParameter)
-        {
-            FilterInputWindow newWindow = new(GetRevitWindowOwner(commandData))
-            {
-                MainTitle = { Text = mainTitle },
-                SubTitle = { Text = subTitle },
-                ParameterName = { Text = selectedParameter },
-            };
-            newWindow.ShowDialog();
-        }
+        //public static void CallInputWindow(ExternalCommandData commandData, string mainTitle, string subTitle, string selectedParameter)
+        //{
+        //    FilterInputWindow newWindow = new(GetRevitWindowOwner(commandData))
+        //    {
+        //        MainTitle = { Text = mainTitle },
+        //        SubTitle = { Text = subTitle },
+        //        ParameterName = { Text = selectedParameter },
+        //    };
+        //    newWindow.ShowDialog();
+        //}
 
         public Parameter PickParameter(ICollection<Element> selectedElements)
         {
             if (selectedElements == null) return null;
 
-            IEnumerable<Parameter> parameters = null;
             Parameter parameter = null;
 
             foreach (Element element in selectedElements)
             {
                 // Get Parameters from SourceObject
-                parameters = element.GetOrderedParameters();
+                element.GetOrderedParameters();
 
                 // Pick specific parameter for testing
                 parameter = element.LookupParameter("Length");
@@ -65,21 +63,15 @@ namespace RevitPersonalToolbox
 
         private string GetParameterValue(Parameter parameter)
         {
-            switch (parameter.StorageType)
+            return parameter.StorageType switch
             {
-                case StorageType.Double:
-                    return parameter.AsValueString();
-                case StorageType.ElementId:
-                    return parameter.AsValueString();
-                case StorageType.Integer:
-                    return parameter.AsValueString();
-                case StorageType.None:
-                    return parameter.AsValueString();
-                case StorageType.String:
-                    return parameter.AsString();
-                default:
-                    return null;
-            }
+                StorageType.Double => parameter.AsValueString(),
+                StorageType.ElementId => parameter.AsValueString(),
+                StorageType.Integer => parameter.AsValueString(),
+                StorageType.None => parameter.AsValueString(),
+                StorageType.String => parameter.AsString(),
+                _ => null
+            };
         }
     }
 }
