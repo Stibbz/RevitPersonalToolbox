@@ -20,8 +20,6 @@ public partial class SingleSelectionWindow : Window
         viewModel.SelectedItem = ListBoxSelection.SelectedItem;
 
         Close();
-
-        //viewModel.ApplySelection();
     }
 
     private void OnCancelButtonClick(object sender, RoutedEventArgs e)

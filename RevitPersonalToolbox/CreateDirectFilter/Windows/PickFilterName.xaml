@@ -58,7 +58,7 @@
             Foreground="Black"
             />
 
-            <TextBox VerticalContentAlignment="Center"  Height="30" Width="300">
+            <TextBox x:Name="InputFilterName" VerticalContentAlignment="Center"  Height="30" Width="300">
                 <TextBox.Style>
                     <Style TargetType="TextBox">
                         <Style.Triggers>

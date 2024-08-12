@@ -15,7 +15,12 @@ public partial class PickFilterName : Window
 
     private void OnApplyButtonClick(object sender, RoutedEventArgs e)
     {
-
+        ViewModel viewModel = DataContext as ViewModel;
+        if (!InputFilterName.Text.IsNullOrEmpty() || !InputFilterName.Text.IsNullOrWhiteSpace())
+        {
+            if (viewModel != null) viewModel.InputFilterName = InputFilterName.Text;
+            Close();
+        };
     }
 
     private void OnCancelButtonClick(object sender, RoutedEventArgs e)
