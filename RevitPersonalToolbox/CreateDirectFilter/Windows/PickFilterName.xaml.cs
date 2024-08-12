@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using RevitPersonalToolbox.SelectByParameter;
+using System.Windows;
 
 namespace RevitPersonalToolbox.CreateDirectFilter.Windows;
 
@@ -10,6 +11,8 @@ public partial class PickFilterName : Window
     {
         InitializeComponent();
         Owner = owner;
+        MainTitle.Text = "Filter Name";
+        SubTitle.Text = "Enter desired name for the filter";
         DataContext = viewmodel;
     }
 
@@ -19,7 +22,7 @@ public partial class PickFilterName : Window
         if (!InputFilterName.Text.IsNullOrEmpty() || !InputFilterName.Text.IsNullOrWhiteSpace())
         {
             if (viewModel != null) viewModel.InputFilterName = InputFilterName.Text;
-            Close();
+            Hide();
         };
     }
 

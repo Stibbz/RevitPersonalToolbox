@@ -10,14 +10,14 @@ public partial class FilterInputWindow : Window
     {
         InitializeComponent();
         Owner = owner;
+        MainTitle.Text = "Parameters";
+        SubTitle.Text = "Determine which parameter to base the filter on";
         DataContext = viewmodel;
-            
     }
 
     private void OnApplyButtonClick(object sender, RoutedEventArgs e)
     {
-
-        ViewModel viewModel = this.DataContext as ViewModel;
+        ViewModel viewModel = DataContext as ViewModel;
 
         viewModel.InputFilterName = FilterNameInput.Text;
         // TODO: implement dynamic equation using something like enums
