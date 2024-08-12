@@ -2,16 +2,16 @@
 
 namespace RevitPersonalToolbox.CreateDirectFilter.Windows;
 
-public partial class FilterInputWindow : Window
+public partial class EnterFilterName : Window
 {
     public bool Cancelled { get; set; }
         
-    public FilterInputWindow(Window owner, ViewModel viewmodel)
+    public EnterFilterName(Window owner, ViewModel viewmodel)
     {
         InitializeComponent();
         Owner = owner;
-        MainTitle.Text = "Parameters";
-        SubTitle.Text = "Determine which parameter to base the filter on";
+        MainTitle.Text = "Filter Name";
+        SubTitle.Text = "Enter desired name for the filter";
         DataContext = viewmodel;
     }
 
@@ -19,12 +19,11 @@ public partial class FilterInputWindow : Window
     {
         ViewModel viewModel = DataContext as ViewModel;
 
-        viewModel.InputFilterName = FilterNameInput.Text;
-        // TODO: implement dynamic equation using something like enums
-        viewModel.InputFilterValue = ParameterValueInput.Text;
-        Close();
+        if (InputFilterName.Text.IsNullOrEmpty() || InputFilterName.Text.IsNullOrWhiteSpace()) return;
+        viewModel.InputFilterName = InputFilterName.Text;
+        Hide();
 
-        viewModel.ApplyInput();
+        //TODO: Check current filter names against what's been entered to avoid failure due to duplicate naming
     }
 
     private void OnCancelButtonClick(object sender, RoutedEventArgs e)

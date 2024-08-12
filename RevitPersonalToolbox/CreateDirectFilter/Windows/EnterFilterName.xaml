@@ -1,4 +1,4 @@
-﻿<Window x:Class="RevitPersonalToolbox.CreateDirectFilter.Windows.PickFilterName"
+﻿<Window x:Class="RevitPersonalToolbox.CreateDirectFilter.Windows.EnterFilterName"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="RevitPersonalToolbox" 
@@ -11,7 +11,7 @@
             </VisualBrush.Transform>
             <VisualBrush.Visual>
                 <Grid>
-                    <TextBlock FontStyle="Italic" Foreground="Black" Opacity="0.3" Text="Filter Name …"/>
+                    <TextBlock FontStyle="Italic" Foreground="Black" Opacity="0.3" Text="Enter name …"/>
                 </Grid>
             </VisualBrush.Visual>
         </VisualBrush>
@@ -46,7 +46,6 @@
                 Foreground="DarkGray"
             />
         </StackPanel>
-
 
         <StackPanel Margin="4,2,8,12" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Label

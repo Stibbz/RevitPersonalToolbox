@@ -6,10 +6,8 @@ public class ViewModel(RevitUtils revitUtils)
 {
     //Properties
     public Dictionary<string, dynamic> ParameterDictionary { get; set; } = [];
-    public object SelectedItem { get; set; }
-
     public ICollection<Element> SelectedElements ;
-    public ElementId Parameter { get; set; }
+    public ElementId SelectedParameter { get; set; }
     public string InputFilterName { get; set; }
     public string InputFilterValue { get; set; }
 
@@ -26,9 +24,12 @@ public class ViewModel(RevitUtils revitUtils)
         return Command.Cancelled = false;
     }
 
-    public void ApplyInput()
+    public void ApplyUserInput()
     {
-        ParameterFilterElement viewFilter = revitUtils.CreateViewFilter(SelectedElements, Parameter, InputFilterName, InputFilterValue);
-        revitUtils.ApplyFilterToView(viewFilter);
+        ICollection<ParameterFilterElement> viewFilters = [];
+        ParameterFilterElement viewFilter = revitUtils.CreateViewFilter(SelectedElements, SelectedParameter, InputFilterName, InputFilterValue);
+        viewFilters.Add(viewFilter);
+
+        revitUtils.ApplyFilterToView(viewFilters);
     }
 }

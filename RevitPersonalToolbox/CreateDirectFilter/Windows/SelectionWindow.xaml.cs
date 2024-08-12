@@ -2,23 +2,27 @@
 
 namespace RevitPersonalToolbox.CreateDirectFilter.Windows;
 
-public partial class SingleSelectionWindow : Window
+public partial class SelectionWindow : Window
 {
-    public SingleSelectionWindow(Window owner, ViewModel viewModel)
+    public SelectionWindow(Window owner, ViewModel viewModel)
     {
         InitializeComponent();
         Owner = owner;
-        MainTitle.Text = "Parameters";
+        MainTitle.Text = "AllParameters";
         SubTitle.Text = "Determine which parameter to base the filter on";
         DataContext = viewModel;
     }
 
     private void OnApplyButtonClick(object sender, RoutedEventArgs e)
     {
-        if (DataContext is not ViewModel viewModel) return;
-        viewModel.SelectedItem = ListBoxSelection.SelectedItem;
+        ViewModel viewModel = DataContext as ViewModel;
 
-        Hide();
+        KeyValuePair<string, dynamic> kvp = (KeyValuePair<string, dynamic>)ListBoxSelection.SelectedItem;
+        ElementId parameter = kvp.Value;
+
+        viewModel.SelectedParameter = parameter;
+
+        if(ListBoxSelection.SelectedItem != null) Hide();
     }
 
     private void OnCancelButtonClick(object sender, RoutedEventArgs e)

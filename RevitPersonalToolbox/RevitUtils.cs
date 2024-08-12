@@ -162,14 +162,11 @@ public class RevitUtils(ExternalCommandData commandData)
         return assignedViews;
     }
 
-    public ParameterFilterElement CreateViewFilter(ICollection<Element> elements, ElementId parameters, string filterName, string value)
+    public ParameterFilterElement CreateViewFilter(ICollection<Element> elements, ElementId parameter, string filterName, string value)
     {
-        using Transaction t = new(Document, "Created Filter based on selection");
-        t.Start();
-
         // Create filter rules (i.e. "length =< 100")
         List<FilterRule> filterRules = [];
-        filterRules.Add(ParameterFilterRuleFactory.CreateGreaterOrEqualRule(parameters, value, false));
+        filterRules.Add(ParameterFilterRuleFactory.CreateGreaterOrEqualRule(parameter, value, false));
         ElementFilter elementFilter = CreateElementFilterFromFilterRules(filterRules);
 
         // Create filter using the filter rules
@@ -177,9 +174,7 @@ public class RevitUtils(ExternalCommandData commandData)
         ParameterFilterElement parameterFilterElement = ParameterFilterElement.Create(Document, filterName, categories);
             
         parameterFilterElement.SetElementFilter(elementFilter);
-
-        t.Commit();
-
+        
         return parameterFilterElement;
     }
 
@@ -208,11 +203,14 @@ public class RevitUtils(ExternalCommandData commandData)
         return filterableParameterIds;
     }
 
-    public void ApplyFilterToView(ParameterFilterElement viewFilter)
+    public void ApplyFilterToView(ICollection<ParameterFilterElement> viewFilters)
     {
         View view = Document.ActiveView;
 
-        view.AddFilter(viewFilter.Id);
-        view.SetFilterVisibility(viewFilter.Id, false);
+        foreach (ParameterFilterElement viewFilter in viewFilters)
+        {
+            view.AddFilter(viewFilter.Id);
+            view.SetFilterVisibility(viewFilter.Id, false);
+        }
     }
 }

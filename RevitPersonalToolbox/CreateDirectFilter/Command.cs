@@ -13,17 +13,23 @@ public class Command : IExternalCommand
 
     public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
     {
+        Document document = commandData.Application.ActiveUIDocument.Document;
         RevitUtils revitUtils = new(commandData);
         ViewModel viewModel = new(revitUtils);
         viewModel.LoadParameterData();
 
         Window windowOwner = Utils.GetRevitWindowOwner(commandData);
 
-        if (ShowDialog(new SingleSelectionWindow(windowOwner, viewModel)) &&
-            ShowDialog(new PickFilterName(windowOwner, viewModel)) &&
-            ShowDialog(new FilterInputWindow(windowOwner, viewModel)))
+        if (ShowDialog(new SelectionWindow(windowOwner, viewModel)) &&
+            ShowDialog(new EnterFilterName(windowOwner, viewModel)) &&
+            ShowDialog(new EnterFilterValues(windowOwner, viewModel)))
         {
-            viewModel.ApplyInput();
+            using Transaction t = new(document, "Created Filter based on selection");
+            t.Start();
+
+            viewModel.ApplyUserInput();
+
+            t.Commit();
         }
 
         return Cancelled ? Result.Cancelled : Result.Succeeded;
