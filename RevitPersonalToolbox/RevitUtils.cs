@@ -9,7 +9,7 @@ public class RevitUtils(Document document, UIDocument uiDocument)
 {
     //private UIDocument UiDocument { get; } = commandData.Application.ActiveUIDocument;
     //private Document Document { get; } = commandData.Application.ActiveUIDocument.Document;
-    
+
     public static DataTable CreateDataTable<T>(IEnumerable<T> list)
     {
         Type type = typeof(T);
@@ -19,7 +19,8 @@ public class RevitUtils(Document document, UIDocument uiDocument)
         dataTable.TableName = typeof(T).FullName;
         foreach (PropertyInfo info in properties)
         {
-            dataTable.Columns.Add(new DataColumn(info.Name, Nullable.GetUnderlyingType(info.PropertyType) ?? info.PropertyType));
+            dataTable.Columns.Add(new DataColumn(info.Name,
+                Nullable.GetUnderlyingType(info.PropertyType) ?? info.PropertyType));
         }
 
         foreach (T entity in list)
@@ -108,7 +109,8 @@ public class RevitUtils(Document document, UIDocument uiDocument)
             .Where(v => v.CanUseTemporaryVisibilityModes());
     }
 
-    public Dictionary<string, dynamic> GetParameterData(ICollection<Element> allSelectedElements, ICollection<ElementId> parameters)
+    public Dictionary<string, dynamic> GetParameterData(ICollection<Element> allSelectedElements,
+        ICollection<ElementId> parameters)
     {
         Dictionary<string, dynamic> parameterDictionary = [];
         foreach (Element element in allSelectedElements)
@@ -162,7 +164,8 @@ public class RevitUtils(Document document, UIDocument uiDocument)
         return assignedViews;
     }
 
-    public ParameterFilterElement CreateViewFilter(ICollection<Element> elements, ElementId parameter, string filterName, string value)
+    public ParameterFilterElement CreateViewFilter(ICollection<Element> elements, ElementId parameter,
+        string filterName, string value)
     {
         // Create filter rules (i.e. "length =< 100")
         List<FilterRule> filterRules = [];
@@ -188,6 +191,7 @@ public class RevitUtils(Document document, UIDocument uiDocument)
             ElementParameterFilter elementParameterFilter = new(filterRule);
             elementFilters.Add(elementParameterFilter);
         }
+
         LogicalAndFilter elemFilter = new(elementFilters);
 
         return elemFilter;
@@ -198,8 +202,9 @@ public class RevitUtils(Document document, UIDocument uiDocument)
         if (allSelectedElements == null) return null;
 
         ICollection<ElementId> categories = allSelectedElements.Select(x => x.Category.Id).ToList();
-        ICollection<ElementId> filterableParameterIds = ParameterFilterUtilities.GetFilterableParametersInCommon(document, categories);
-            
+        ICollection<ElementId> filterableParameterIds =
+            ParameterFilterUtilities.GetFilterableParametersInCommon(document, categories);
+
         return filterableParameterIds;
     }
 
@@ -224,5 +229,20 @@ public class RevitUtils(Document document, UIDocument uiDocument)
                 view.SetFilterVisibility(viewFilter.Id, false);
             }
         }
+    }
+
+    public List<string> GetParameterValues(ICollection<Element> selectedElements, ElementId selectedParameter)
+    {
+        List<string> parameterValuesInSelection = new();
+        foreach (Element element in selectedElements)
+        {
+            BuiltInParameter bip = (BuiltInParameter)selectedParameter.IntegerValue;
+            string parameterName = GetParameterName(bip, element);
+            Parameter parameter = element.LookupParameter(parameterName);
+            if (parameter.AsValueString() == null) return null;
+            parameterValuesInSelection.Add(parameter.AsValueString());
+        }
+
+        return parameterValuesInSelection;
     }
 }

@@ -18,7 +18,7 @@ public class Command : IExternalCommand
 
         RevitUtils revitUtils = new(document, uiDocument);
         ViewModel viewModel = new(revitUtils);
-        viewModel.LoadParameterData();
+        viewModel.LoadData();
 
         Window windowOwner = Utils.GetRevitWindowOwner(commandData);
 

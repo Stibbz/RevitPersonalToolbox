@@ -10,9 +10,13 @@ public partial class EnterFilterValues : Window
     {
         InitializeComponent();
         Owner = owner;
-        MainTitle.Text = "AllParameters";
-        SubTitle.Text = "Determine which parameter to base the filter on";
+        MainTitle.Text = "Parameter Values";
+        SubTitle.Text = "Provide a name for the filter";
         DataContext = viewmodel;
+        viewmodel.LoadData();
+
+        //TODO: Tested this on EquationSelect, move this to InputParameterValue
+        EquationSelect.ItemsSource = viewmodel.ValueSuggestions;
     }
 
     private void OnApplyButtonClick(object sender, RoutedEventArgs e)
@@ -20,7 +24,7 @@ public partial class EnterFilterValues : Window
         ViewModel viewModel = DataContext as ViewModel;
 
         // TODO: implement dynamic equation using something like enums
-        viewModel.InputFilterValue = InputParameterValue.Text;
+        viewModel.FilterValue = InputParameterValue.Text;
         Close();
     }
 

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Autodesk.Revit.UI;
 
 namespace RevitPersonalToolbox.CreateDirectFilter.Windows;
 
@@ -19,11 +20,16 @@ public partial class EnterFilterName : Window
     {
         ViewModel viewModel = DataContext as ViewModel;
 
+        foreach (string existingFilterName in viewModel.ExistingFilterNames)
+        {
+            if (InputFilterName.Text != existingFilterName) continue;
+            TaskDialog.Show("Error", "A filter with that name already exists.\nPlease choose a different name.");
+            return;
+        }
+        
         if (InputFilterName.Text.IsNullOrEmpty() || InputFilterName.Text.IsNullOrWhiteSpace()) return;
-        viewModel.InputFilterName = InputFilterName.Text;
+        viewModel.FilterName = InputFilterName.Text;
         Hide();
-
-        //TODO: Check current filter names against what's been entered to avoid failure due to duplicate naming
     }
 
     private void OnCancelButtonClick(object sender, RoutedEventArgs e)

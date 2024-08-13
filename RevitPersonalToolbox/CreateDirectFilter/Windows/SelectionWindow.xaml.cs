@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,7 +16,7 @@ public partial class SelectionWindow : Window
         InitializeComponent();
         Owner = owner;
         MainTitle.Text = "Parameters";
-        SubTitle.Text = "Determine which parameter to base the filter on";
+        SubTitle.Text = "Enter the parameter value to filter by";
 
         Parameters = new ObservableCollection<string>(viewModel.ParameterDictionary.Keys);
         DataContext = this;
