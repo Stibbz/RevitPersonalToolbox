@@ -59,7 +59,7 @@
             <TextBox 
                 x:Name="InputParameterValue" 
                 VerticalContentAlignment="Center"  
-                Height="30" 
+                Height="26" 
                 Width="200">
                 <TextBox.Style>
                     <Style TargetType="TextBox">

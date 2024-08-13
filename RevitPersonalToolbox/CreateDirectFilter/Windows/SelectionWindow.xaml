@@ -4,6 +4,19 @@
         Title="RevitPersonalToolbox" 
         Height="768" Width="576" MinWidth="576"
         WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <VisualBrush x:Key="SearchHint" TileMode="None" Stretch="None" AlignmentX="Left">
+            <VisualBrush.Transform>
+                <TranslateTransform X="5" Y="0" />
+            </VisualBrush.Transform>
+            <VisualBrush.Visual>
+                <Grid>
+                    <TextBlock FontStyle="Italic" Foreground="Black" Opacity="0.3" Text="Search …"/>
+                </Grid>
+            </VisualBrush.Visual>
+        </VisualBrush>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -32,6 +45,25 @@
                 FontSize="12"
                 Foreground="DarkGray"
             />
+            <TextBox
+                Margin="8,2,8,4"
+                BorderThickness="1"
+                x:Name="SearchBox"
+                VerticalContentAlignment="Center"
+                Height="26"
+                FontSize="12"
+                Foreground="Black"
+                TextChanged="SearchBox_TextChanged" >
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Style.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter Property="Background" Value="{StaticResource SearchHint}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
         </StackPanel>
 
         <ListBox 
@@ -39,7 +71,7 @@
             Margin="4,2,8,12"
             Grid.Row="1"
             SelectionMode="Single"
-            ItemsSource="{Binding ParameterDictionary}">
+            ItemsSource="{Binding Parameters}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -47,7 +79,7 @@
                             <ColumnDefinition Width="500" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Key}" Grid.Column="0" />
+                        <TextBlock Text="{Binding}" Grid.Column="0" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

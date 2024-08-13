@@ -19,7 +19,9 @@ namespace RevitPersonalToolbox.SelectByParameter
         {
             // Where code comes in from Revit
             Document document = commandData.Application.ActiveUIDocument.Document;
-            RevitUtils revitUtils = new RevitUtils(commandData);
+            UIDocument uiDocument = commandData.Application.ActiveUIDocument;
+
+            RevitUtils revitUtils = new RevitUtils(document, uiDocument);
             RevitExecutor revitExecutor = new RevitExecutor(document, revitUtils);
             
             BusinessLogic businessLogic = new BusinessLogic(document);

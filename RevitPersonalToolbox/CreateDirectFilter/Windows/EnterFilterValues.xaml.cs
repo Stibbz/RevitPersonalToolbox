@@ -22,8 +22,6 @@ public partial class EnterFilterValues : Window
         // TODO: implement dynamic equation using something like enums
         viewModel.InputFilterValue = InputParameterValue.Text;
         Close();
-
-        viewModel.ApplyUserInput();
     }
 
     private void OnCancelButtonClick(object sender, RoutedEventArgs e)

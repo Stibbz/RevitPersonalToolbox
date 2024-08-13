@@ -1,15 +1,15 @@
 ﻿using System.Data;
 using System.Reflection;
+using System.Windows.Media.Animation;
 using Autodesk.Revit.UI;
 
 namespace RevitPersonalToolbox;
 
-public class RevitUtils(ExternalCommandData commandData)
+public class RevitUtils(Document document, UIDocument uiDocument)
 {
-    private UIDocument UiDocument { get; } = commandData.Application.ActiveUIDocument;
-    private Document Document { get; } = commandData.Application.ActiveUIDocument.Document;
-
-
+    //private UIDocument UiDocument { get; } = commandData.Application.ActiveUIDocument;
+    //private Document Document { get; } = commandData.Application.ActiveUIDocument.Document;
+    
     public static DataTable CreateDataTable<T>(IEnumerable<T> list)
     {
         Type type = typeof(T);
@@ -39,7 +39,7 @@ public class RevitUtils(ExternalCommandData commandData)
     public IEnumerable<Element> SelectAllObservableElements()
     {
         // Select anything that is observable in Revit
-        return new FilteredElementCollector(Document)
+        return new FilteredElementCollector(document)
             .WhereElementIsNotElementType()
             .WhereElementIsViewIndependent()
             .Where(IsObservable);
@@ -59,7 +59,7 @@ public class RevitUtils(ExternalCommandData commandData)
 
     public IEnumerable<Element> SelectRevitLinks()
     {
-        return new FilteredElementCollector(Document, Document.ActiveView.Id)
+        return new FilteredElementCollector(document, document.ActiveView.Id)
             .OfCategory(BuiltInCategory.OST_RvtLinks)
             .OfClass(typeof(RevitLinkInstance))
             .ToElements();
@@ -67,8 +67,8 @@ public class RevitUtils(ExternalCommandData commandData)
 
     public ICollection<Element> GetAllSelectedElements()
     {
-        IEnumerable<ElementId> selection = UiDocument.Selection.GetElementIds();
-        List<Element> selectedElements = selection.Select(id => Document.GetElement(id)).ToList();
+        IEnumerable<ElementId> selection = uiDocument.Selection.GetElementIds();
+        List<Element> selectedElements = selection.Select(id => document.GetElement(id)).ToList();
 
         if (selectedElements.Any()) return selectedElements;
 
@@ -78,7 +78,7 @@ public class RevitUtils(ExternalCommandData commandData)
 
     public IEnumerable<View> GetViewTemplates()
     {
-        return new FilteredElementCollector(Document)
+        return new FilteredElementCollector(document)
             .OfClass(typeof(View))
             .Cast<View>()
             .Where(v => v.IsTemplate)
@@ -87,20 +87,20 @@ public class RevitUtils(ExternalCommandData commandData)
 
     public FilteredElementCollector GetFilterElements()
     {
-        return new FilteredElementCollector(Document)
+        return new FilteredElementCollector(document)
             .OfClass(typeof(FilterElement));
     }
 
     public FilteredElementCollector GetRevitLinks()
     {
-        return new FilteredElementCollector(Document)
+        return new FilteredElementCollector(document)
             .OfCategory(BuiltInCategory.OST_RvtLinks)
             .OfClass(typeof(RevitLinkType));
     }
 
     public IEnumerable<View> GetViews()
     {
-        return new FilteredElementCollector(Document)
+        return new FilteredElementCollector(document)
             .WhereElementIsNotElementType()
             .OfClass(typeof(View))
             .Cast<View>()
@@ -171,10 +171,10 @@ public class RevitUtils(ExternalCommandData commandData)
 
         // Create filter using the filter rules
         ICollection<ElementId> categories = elements.Select(x => x.Category.Id).ToList();
-        ParameterFilterElement parameterFilterElement = ParameterFilterElement.Create(Document, filterName, categories);
-            
+
+        ParameterFilterElement parameterFilterElement = ParameterFilterElement.Create(document, filterName, categories);
         parameterFilterElement.SetElementFilter(elementFilter);
-        
+
         return parameterFilterElement;
     }
 
@@ -198,19 +198,31 @@ public class RevitUtils(ExternalCommandData commandData)
         if (allSelectedElements == null) return null;
 
         ICollection<ElementId> categories = allSelectedElements.Select(x => x.Category.Id).ToList();
-        ICollection<ElementId> filterableParameterIds = ParameterFilterUtilities.GetFilterableParametersInCommon(Document, categories);
+        ICollection<ElementId> filterableParameterIds = ParameterFilterUtilities.GetFilterableParametersInCommon(document, categories);
             
         return filterableParameterIds;
     }
 
     public void ApplyFilterToView(ICollection<ParameterFilterElement> viewFilters)
     {
-        View view = Document.ActiveView;
-
-        foreach (ParameterFilterElement viewFilter in viewFilters)
+        View view = document.ActiveView;
+        if (view.ViewTemplateId != null)
         {
-            view.AddFilter(viewFilter.Id);
-            view.SetFilterVisibility(viewFilter.Id, false);
+            ElementId viewTemplateId = view.ViewTemplateId;
+            View viewTemplate = (View)document.GetElement(viewTemplateId);
+            foreach (ParameterFilterElement viewFilter in viewFilters)
+            {
+                viewTemplate.AddFilter(viewFilter.Id);
+                viewTemplate.SetFilterVisibility(viewFilter.Id, false);
+            }
+        }
+        else
+        {
+            foreach (ParameterFilterElement viewFilter in viewFilters)
+            {
+                view.AddFilter(viewFilter.Id);
+                view.SetFilterVisibility(viewFilter.Id, false);
+            }
         }
     }
 }

@@ -14,7 +14,9 @@ public class Command : IExternalCommand
     public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
     {
         Document document = commandData.Application.ActiveUIDocument.Document;
-        RevitUtils revitUtils = new(commandData);
+        UIDocument uiDocument = commandData.Application.ActiveUIDocument;
+
+        RevitUtils revitUtils = new(document, uiDocument);
         ViewModel viewModel = new(revitUtils);
         viewModel.LoadParameterData();
 
@@ -24,7 +26,7 @@ public class Command : IExternalCommand
             ShowDialog(new EnterFilterName(windowOwner, viewModel)) &&
             ShowDialog(new EnterFilterValues(windowOwner, viewModel)))
         {
-            using Transaction t = new(document, "Created Filter based on selection");
+            using Transaction t = new(document, "Created View Filter using Addin");
             t.Start();
 
             viewModel.ApplyUserInput();

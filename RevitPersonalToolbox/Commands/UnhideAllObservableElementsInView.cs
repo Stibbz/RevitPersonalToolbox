@@ -9,15 +9,17 @@ namespace RevitPersonalToolbox.Commands
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            Document doc = commandData.Application.ActiveUIDocument.Document;
-            RevitUtils utils = new RevitUtils(commandData);
+            Document document = commandData.Application.ActiveUIDocument.Document;
+            UIDocument uiDocument = commandData.Application.ActiveUIDocument;
+
+            RevitUtils utils = new RevitUtils(document, uiDocument);
             
             List<ElementId> hiddenPhysicalElements = utils.SelectAllObservableElements()
-                .Where(x => x.IsHidden(doc.ActiveView))
+                .Where(x => x.IsHidden(document.ActiveView))
                 .Select(x => x.Id)
                 .ToList();
 
-            using (Transaction tx = new Transaction(doc))
+            using (Transaction tx = new Transaction(document))
             {
                 tx.Start("Un-hide All Observable Elements in current ViewWindow");
                 if (hiddenPhysicalElements.Count == 0)
@@ -26,7 +28,7 @@ namespace RevitPersonalToolbox.Commands
                     return Result.Failed;
                 }
 
-                doc.ActiveView.UnhideElements(hiddenPhysicalElements);
+                document.ActiveView.UnhideElements(hiddenPhysicalElements);
                 tx.Commit();
                 TaskDialog.Show("Success", $"{hiddenPhysicalElements.Count} hidden elements have been unhidden.");
             }
