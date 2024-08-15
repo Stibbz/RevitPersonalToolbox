@@ -5,8 +5,6 @@ namespace RevitPersonalToolbox.CreateDirectFilter.Windows;
 
 public partial class EnterFilterName : Window
 {
-    public bool Cancelled { get; set; }
-        
     public EnterFilterName(Window owner, ViewModel viewmodel)
     {
         InitializeComponent();
@@ -14,11 +12,14 @@ public partial class EnterFilterName : Window
         MainTitle.Text = "Filter Name";
         SubTitle.Text = "Enter desired name for the filter";
         DataContext = viewmodel;
+
+        //TODO: Implement suggestions for filter naming. Maybe suggestions based on what you start typing?
     }
 
     private void OnApplyButtonClick(object sender, RoutedEventArgs e)
     {
         ViewModel viewModel = DataContext as ViewModel;
+        Command.Cancelled = false;
 
         foreach (string existingFilterName in viewModel.ExistingFilterNames)
         {
@@ -34,7 +35,6 @@ public partial class EnterFilterName : Window
 
     private void OnCancelButtonClick(object sender, RoutedEventArgs e)
     {
-        Command.Cancelled = true;
         Close();
     }
 }

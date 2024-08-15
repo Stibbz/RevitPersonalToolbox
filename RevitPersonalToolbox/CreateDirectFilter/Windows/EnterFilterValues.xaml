@@ -4,18 +4,6 @@
         Title="RevitPersonalToolbox" 
         Height="256" Width="512" MinWidth="512"
         WindowStartupLocation="CenterOwner">
-    <Window.Resources>
-        <VisualBrush x:Key="SearchHint" TileMode="None" Stretch="None" AlignmentX="Left">
-            <VisualBrush.Transform>
-                <TranslateTransform X="5" Y="0" />
-            </VisualBrush.Transform>
-            <VisualBrush.Visual>
-                <Grid>
-                    <TextBlock FontStyle="Italic" Foreground="Black" Opacity="0.3" Text="Enter value …"/>
-                </Grid>
-            </VisualBrush.Visual>
-        </VisualBrush>
-    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -53,24 +41,21 @@
                 x:Name="EquationSelect"
                 Width="200"
                 Text="Equation"
-                >
+                DisplayMemberPath=".">
             </ComboBox>
 
-            <TextBox 
+            <ComboBox 
                 x:Name="InputParameterValue" 
                 VerticalContentAlignment="Center"  
                 Height="26" 
-                Width="200">
-                <TextBox.Style>
-                    <Style TargetType="TextBox">
-                        <Style.Triggers>
-                            <Trigger Property="Text" Value="">
-                                <Setter Property="Background" Value="{StaticResource SearchHint}"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBox.Style>
-            </TextBox>
+                Width="200"
+                IsEditable="True"
+                Foreground="LightGray"
+                FontStyle="Italic"
+                Text="Enter value ..."
+                PreviewTextInput="InputParameterValue_OnPreviewTextInput"
+                DropDownOpened="InputParameterValue_OnDropDownOpened">
+            </ComboBox>
         </StackPanel>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">

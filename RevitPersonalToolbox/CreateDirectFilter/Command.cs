@@ -9,7 +9,7 @@ namespace RevitPersonalToolbox.CreateDirectFilter;
 [Transaction(TransactionMode.Manual)]
 public class Command : IExternalCommand
 {
-    public static bool Cancelled { get; set; }
+    public static bool Cancelled { get; set; } = true;
 
     public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
     {
@@ -36,11 +36,11 @@ public class Command : IExternalCommand
 
         return Cancelled ? Result.Cancelled : Result.Succeeded;
     }
-
-    private bool ShowDialog(Window window)
+    private static bool ShowDialog(Window window)
     {
         if (!Cancelled)
         {
+            Cancelled = true; // reset cancelled status until code completes
             window.ShowDialog();
         }
 

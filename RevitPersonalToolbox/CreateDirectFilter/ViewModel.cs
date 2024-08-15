@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Autodesk.Revit.UI;
+using RevitPersonalToolbox.CreateDirectFilter.Windows;
 
 namespace RevitPersonalToolbox.CreateDirectFilter;
 
@@ -13,11 +14,12 @@ public class ViewModel(RevitUtils revitUtils)
     public string FilterName { get; set; }
     public string FilterValue { get; set; }
     public IEnumerable<string> ValueSuggestions { get; set; }
+    public EnterFilterValues.ComparisonRule ComparisonRule { get; set; }
 
-    public bool LoadData()
+    public void LoadData()
     {
         SelectedElements = revitUtils.GetAllSelectedElements();
-        if(SelectedElements==null ) { return Command.Cancelled = true; }
+        if (SelectedElements == null) return;
 
         ICollection<ElementId> applicableParameters = revitUtils.GetApplicableParameters(SelectedElements);
         Dictionary<string, dynamic> parameterDictionary = revitUtils.GetParameterData(SelectedElements, applicableParameters);
@@ -29,11 +31,7 @@ public class ViewModel(RevitUtils revitUtils)
         {
             ValueSuggestions = revitUtils.GetParameterValues(SelectedElements, SelectedParameter);
         }
-
-        return Command.Cancelled = false;
     }
-
-    
 
     public void ApplyUserInput()
     {

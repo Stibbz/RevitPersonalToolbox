@@ -8,7 +8,6 @@ namespace RevitPersonalToolbox.CreateDirectFilter.Windows;
 public partial class SelectionWindow : Window
 {
     private readonly ViewModel _viewModel;
-
     public ObservableCollection<string> Parameters { get; set; }
 
     public SelectionWindow(Window owner, ViewModel viewModel)
@@ -22,6 +21,11 @@ public partial class SelectionWindow : Window
         DataContext = this;
 
         _viewModel = viewModel;
+
+        // Since this is the main window and Cancelled is true by default:
+        // If Parameters is not empty, this indicates successful loading, so set Cancelled to false.
+        if (Parameters.Count == 0) return;
+        Command.Cancelled = false;
     }
 
     private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -74,6 +78,8 @@ public partial class SelectionWindow : Window
 
     private void OnApplyButtonClick(object sender, RoutedEventArgs e)
     {
+        Command.Cancelled = false;
+
         string selectedItem = ListBoxSelection.SelectedItem.ToString();
         _viewModel.SelectedParameter = _viewModel.ParameterDictionary[selectedItem];
 
@@ -82,7 +88,6 @@ public partial class SelectionWindow : Window
 
     private void OnCancelButtonClick(object sender, RoutedEventArgs e)
     {
-        Command.Cancelled = true;
         Hide();
     }
 }
