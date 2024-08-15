@@ -38,11 +38,10 @@ public class Command : IExternalCommand
     }
     private static bool ShowDialog(Window window)
     {
-        if (!Cancelled)
-        {
-            Cancelled = true; // reset cancelled status until code completes
-            window.ShowDialog();
-        }
+        if (Cancelled) return !Cancelled;
+
+        Cancelled = true; // reset cancelled status until code completes
+        window.ShowDialog();
 
         return !Cancelled;
     }

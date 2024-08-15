@@ -16,10 +16,8 @@ public partial class SelectionWindow : Window
         Owner = owner;
         MainTitle.Text = "Parameters";
         SubTitle.Text = "Enter the parameter value to filter by";
-
         Parameters = new ObservableCollection<string>(viewModel.ParameterDictionary.Keys);
         DataContext = this;
-
         _viewModel = viewModel;
 
         // Since this is the main window and Cancelled is true by default:

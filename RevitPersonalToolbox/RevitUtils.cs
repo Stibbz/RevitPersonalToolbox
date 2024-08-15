@@ -66,13 +66,42 @@ public class RevitUtils(Document document, UIDocument uiDocument)
             .ToElements();
     }
 
+    /// <summary>
+    /// Retrieves all selected elements from the current selection in the UI document.
+    /// </summary>
+    /// <returns>A collection of selected elements.</returns>
     public ICollection<Element> GetAllSelectedElements()
     {
         IEnumerable<ElementId> selection = uiDocument.Selection.GetElementIds();
-        List<Element> selectedElements = selection.Select(id => document.GetElement(id)).ToList();
+        List<Element> selectedElements = selection.Select(document.GetElement).ToList();
 
-        if (selectedElements.Any()) return selectedElements;
+        if(selectedElements.Any()) return selectedElements;
+        TaskDialog.Show("Error", "Select items first.");
+        return null;
+    }
 
+    /// <summary>
+    /// Retrieves all selected elements from the current selection in the UI document.
+    /// Provide a list of type names to invalidate the result.
+    /// </summary>
+    /// <param name="invalidTypeNames">A list of type names that will invalidate the element retrieval.</param>
+    /// <returns>A collection of selected elements. Returns null if an invalid family type is included in the selection.</returns>
+    public ICollection<Element> GetAllSelectedElements(List<string> invalidTypeNames)
+    {
+        IEnumerable<ElementId> selection = uiDocument.Selection.GetElementIds();
+        List<Element> selectedElements = selection.Select(document.GetElement).ToList();
+
+        foreach (string typeName in invalidTypeNames)
+        {
+            foreach (Element element in selectedElements)
+            {
+                if (element.GetType().Name == typeName) ;
+                TaskDialog.Show("Error",$"Element of type \"{typeName}\" is not valid!\nPlease try again without this element selected.");
+                return null;
+            }
+        }
+
+        if(selectedElements.Any()) return selectedElements;
         TaskDialog.Show("Error", "Select items first.");
         return null;
     }

@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using RevitPersonalToolbox.CreateDirectFilter.Windows;
 
@@ -18,9 +19,10 @@ public class ViewModel(RevitUtils revitUtils)
 
     public void LoadData()
     {
-        SelectedElements = revitUtils.GetAllSelectedElements();
+        List<string> excludedTypeNames = ["Viewport"];
+        SelectedElements = revitUtils.GetAllSelectedElements(excludedTypeNames);
         if (SelectedElements == null) return;
-
+        
         ICollection<ElementId> applicableParameters = revitUtils.GetApplicableParameters(SelectedElements);
         Dictionary<string, dynamic> parameterDictionary = revitUtils.GetParameterData(SelectedElements, applicableParameters);
         ParameterDictionary = Utils.SortDictionary(parameterDictionary);
