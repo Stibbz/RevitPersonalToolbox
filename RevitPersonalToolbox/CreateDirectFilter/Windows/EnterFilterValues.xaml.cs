@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -12,24 +11,32 @@ public partial class EnterFilterValues : Window
         Equals,
         DoesNotEqual,
         IsGreaterThan,
+        IsGreaterThanOrEqualTo,
         IsLessThan,
+        IsLessThanOrEqualTo,
         Contains,
-        DoesNotContain
+        DoesNotContain,
+        BeginsWith,
+        DoesNotBeginWith,
+        EndsWith,
+        DoesNotEndWith,
+        HasValue,
+        HasNoValue
     }
 
-    public EnterFilterValues(Window owner, ViewModel viewmodel)
+    public EnterFilterValues(Window owner, ViewModel viewModel)
     {
         InitializeComponent();
         Owner = owner;
         MainTitle.Text = "Parameter Values";
         SubTitle.Text = "Provide a name for the filter";
-        DataContext = viewmodel;
-        viewmodel.LoadData();
-
+        DataContext = viewModel;
+        viewModel.LoadData();
+        
         EquationSelect.ItemsSource = Enum.GetValues(typeof(ComparisonRule)).Cast<ComparisonRule>();
         EquationSelect.SelectedIndex = 0;
 
-        InputParameterValue.ItemsSource = viewmodel.ValueSuggestions;
+        InputParameterValue.ItemsSource = viewModel.ValueSuggestions;
     }
 
     private void OnApplyButtonClick(object sender, RoutedEventArgs e)

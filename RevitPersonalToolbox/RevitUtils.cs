@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Reflection;
-using System.Windows.Media.Animation;
 using Autodesk.Revit.UI;
+using RevitPersonalToolbox.CreateDirectFilter.Windows;
 
 namespace RevitPersonalToolbox;
 
@@ -93,12 +93,9 @@ public class RevitUtils(Document document, UIDocument uiDocument)
 
         foreach (string typeName in invalidTypeNames)
         {
-            foreach (Element element in selectedElements)
-            {
-                if (element.GetType().Name == typeName) ;
-                TaskDialog.Show("Error",$"Element of type \"{typeName}\" is not valid!\nPlease try again without this element selected.");
-                return null;
-            }
+            if (selectedElements.All(element => element.GetType().Name != typeName)) continue;
+            TaskDialog.Show("Error", $"Element of type \"{typeName}\" is not valid!\nPlease try again without this element selected.");
+            return null;
         }
 
         if(selectedElements.Any()) return selectedElements;
@@ -194,11 +191,37 @@ public class RevitUtils(Document document, UIDocument uiDocument)
     }
 
     public ParameterFilterElement CreateViewFilter(ICollection<Element> elements, ElementId parameter,
-        string filterName, string value)
+        string filterName, EnterFilterValues.ComparisonRule comparisonRule, string value)
     {
-        // Create filter rules (i.e. "length =< 100")
         List<FilterRule> filterRules = [];
-        filterRules.Add(ParameterFilterRuleFactory.CreateGreaterOrEqualRule(parameter, value, false));
+
+        // Define a dictionary to map ComparisonRule to the corresponding method
+        Dictionary<EnterFilterValues.ComparisonRule, Func<ElementId, string, bool, FilterRule>> ruleFactoryMethods = new()
+        {
+            { EnterFilterValues.ComparisonRule.Equals, ParameterFilterRuleFactory.CreateEqualsRule },
+            { EnterFilterValues.ComparisonRule.DoesNotEqual, ParameterFilterRuleFactory.CreateNotEqualsRule },
+            { EnterFilterValues.ComparisonRule.IsGreaterThan, ParameterFilterRuleFactory.CreateGreaterRule },
+            { EnterFilterValues.ComparisonRule.IsGreaterThanOrEqualTo, ParameterFilterRuleFactory.CreateGreaterOrEqualRule },
+            { EnterFilterValues.ComparisonRule.IsLessThan, ParameterFilterRuleFactory.CreateLessRule },
+            { EnterFilterValues.ComparisonRule.IsLessThanOrEqualTo, ParameterFilterRuleFactory.CreateLessOrEqualRule },
+            { EnterFilterValues.ComparisonRule.Contains, ParameterFilterRuleFactory.CreateContainsRule },
+            { EnterFilterValues.ComparisonRule.DoesNotContain, ParameterFilterRuleFactory.CreateNotContainsRule },
+            { EnterFilterValues.ComparisonRule.BeginsWith, ParameterFilterRuleFactory.CreateBeginsWithRule },
+            { EnterFilterValues.ComparisonRule.DoesNotBeginWith, ParameterFilterRuleFactory.CreateNotBeginsWithRule },
+            { EnterFilterValues.ComparisonRule.EndsWith, ParameterFilterRuleFactory.CreateEndsWithRule },
+            { EnterFilterValues.ComparisonRule.DoesNotEndWith, ParameterFilterRuleFactory.CreateNotEndsWithRule }
+        };
+       
+        // Get the appropriate method based on the comparisonRule
+        if (ruleFactoryMethods.TryGetValue(comparisonRule, out Func<ElementId, string, bool, FilterRule> createRuleMethod))
+        {
+            filterRules.Add(createRuleMethod(parameter, value, false));
+        }
+        else
+        {
+            throw new ArgumentOutOfRangeException(nameof(comparisonRule), comparisonRule, null);
+        }
+
         ElementFilter elementFilter = CreateElementFilterFromFilterRules(filterRules);
 
         // Create filter using the filter rules

@@ -7,7 +7,6 @@ namespace RevitPersonalToolbox.CreateDirectFilter;
 
 public class ViewModel(RevitUtils revitUtils)
 {
-    //Properties
     public Dictionary<string, dynamic> ParameterDictionary { get; set; } = [];
     public ICollection<Element> SelectedElements ;
     public ElementId SelectedParameter { get; set; }
@@ -38,7 +37,7 @@ public class ViewModel(RevitUtils revitUtils)
     public void ApplyUserInput()
     {
         ICollection<ParameterFilterElement> viewFilters = [];
-        ParameterFilterElement viewFilter = revitUtils.CreateViewFilter(SelectedElements, SelectedParameter, FilterName, FilterValue);
+        ParameterFilterElement viewFilter = revitUtils.CreateViewFilter(SelectedElements, SelectedParameter, FilterName, ComparisonRule, FilterValue);
         viewFilters.Add(viewFilter);
 
         revitUtils.ApplyFilterToView(viewFilters);
