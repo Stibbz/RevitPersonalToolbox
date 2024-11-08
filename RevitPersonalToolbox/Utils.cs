@@ -24,6 +24,7 @@ namespace RevitPersonalToolbox
             return result;
         }
 
+        // soort van stay on top functie
         public static Window GetRevitWindowOwner(ExternalCommandData commandData)
         {
             IntPtr RevitWindowHandle = commandData.Application.MainWindowHandle;

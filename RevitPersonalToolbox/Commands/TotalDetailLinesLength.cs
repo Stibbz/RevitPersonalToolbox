@@ -24,7 +24,7 @@ namespace RevitPersonalToolbox.Commands
                 Parameter lineStyleParam = line.LookupParameter("Line Style");
                 if (lineStyleParam == null) continue;
                 string lineStyle = lineStyleParam.AsValueString();
-                if (!lineStyle.Contains("Red")) continue;
+                if (!lineStyle.Contains("Rood")) continue;
 
                 // Add length of each red line
                 Parameter lengthParam = line.LookupParameter("Length");
@@ -35,7 +35,7 @@ namespace RevitPersonalToolbox.Commands
             }
 
             TaskDialog.Show("Length", $@"Total length of all red lines in this view is: {totalLength}m");
-            TaskDialog.Show("Area", $@"Total area (at 2.4m height) is: {totalLength * 2.4}m");
+            TaskDialog.Show("Area", $@"Total area (at 2.6m height) is: {totalLength * 2.6}m");
 
             return Result.Succeeded;
         }

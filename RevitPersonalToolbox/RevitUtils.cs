@@ -45,7 +45,7 @@ public class RevitUtils(Document document, UIDocument uiDocument)
             .WhereElementIsViewIndependent()
             .Where(IsObservable);
     }
-
+    
     private static bool IsObservable(Element e)
     {
         // Filter to exclude anything that is not observable in Revit
@@ -266,6 +266,11 @@ public class RevitUtils(Document document, UIDocument uiDocument)
         if (view.ViewTemplateId != null)
         {
             ElementId viewTemplateId = view.ViewTemplateId;
+            if (viewTemplateId == ElementId.InvalidElementId)
+            {
+                viewTemplateId = view.Id;
+            }
+
             View viewTemplate = (View)document.GetElement(viewTemplateId);
             foreach (ParameterFilterElement viewFilter in viewFilters)
             {
@@ -291,7 +296,7 @@ public class RevitUtils(Document document, UIDocument uiDocument)
             BuiltInParameter bip = (BuiltInParameter)selectedParameter.IntegerValue;
             string parameterName = GetParameterName(bip, element);
             Parameter parameter = element.LookupParameter(parameterName);
-            if (parameter.AsValueString() == null) return null;
+            if (parameter?.AsValueString() == null) return null;
             parameterValuesInSelection.Add(parameter.AsValueString());
         }
 

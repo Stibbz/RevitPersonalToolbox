@@ -20,8 +20,10 @@ public class Command : IExternalCommand
         ViewModel viewModel = new(revitUtils);
         viewModel.LoadData();
 
+        // Keep Window on top of Revit
         Window windowOwner = Utils.GetRevitWindowOwner(commandData);
 
+        // Create a new window that shows existing filters
         if (ShowDialog(new SelectionWindow(windowOwner, viewModel)) &&
             ShowDialog(new EnterFilterName(windowOwner, viewModel)) &&
             ShowDialog(new EnterFilterValues(windowOwner, viewModel)))
